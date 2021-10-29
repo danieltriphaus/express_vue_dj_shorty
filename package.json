@@ -1,22 +1,46 @@
 {
-  "name": "express-example-starter",
+  "name": "express_vue_dj_shorty",
   "version": "1.0.0",
-  "description": "An Express-based application skeleton",
-  "main": "app.js",
-  "scripts": {
-    "start": "nodemon app.js localhost 8080"
+  "private": true,
+  "author": {
+    "name": "danieltriphaus",
+    "email": "d.triphaus@outlook.de"
   },
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit",
+    "lint": "vue-cli-service lint"
+  },
+  "main": "index.js",
   "dependencies": {
-    "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
-    "express": "~4.16.1",
-    "morgan": "~1.9.1"
+    "@vue/cli": "^4.5.15",
+    "core-js": "^3.6.5",
+    "global": "^4.4.0",
+    "vue": "^2.6.11",
+    "vue-router": "^3.2.0"
   },
   "devDependencies": {
-    "nodemon": "1.18.4"
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-unit-jest": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/test-utils": "^1.0.3",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "vue-template-compiler": "^2.6.11"
   },
-  "keywords": [
-    "expressjs",
-    "express"
-  ]
+  "_id": "express_vue_dj_shorty@1.0.0",
+  "bugs": {
+    "url": "https://github.com/danieltriphaus/express_vue_dj_shorty/issues"
+  },
+  "homepage": "https://github.com/danieltriphaus/express_vue_dj_shorty#readme",
+  "license": "MIT",
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danieltriphaus/express_vue_dj_shorty.git"
+  }
 }
