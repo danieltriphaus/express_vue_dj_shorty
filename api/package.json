@@ -4,19 +4,17 @@
   "description": "An Express-based application skeleton",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js localhost 8080"
+    "start": "nodemon app.js localhost"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "global": "^4.4.0",
     "morgan": "~1.9.1"
   },
   "devDependencies": {
-    "nodemon": "1.18.4"
+    "nodemon": "^2.0.14"
   },
-  "keywords": [
-    "expressjs",
-    "express"
-  ]
+  "keywords": ["expressjs", "express"]
 }

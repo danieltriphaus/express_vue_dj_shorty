@@ -1,21 +1,25 @@
 var express = require("express");
-var path = require("path");
 var cookieParser = require("cookie-parser");
-var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 
 var app = express();
 
-app.use(logger("dev"));
+const path = __dirname + "/views/";
+
+app.use(express.static(path));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/api", indexRouter);
+app.get("/", function (req, res) {
+  res.sendFile(path + "index.html");
+});
 
-var listener = app.listen(8080, function () {
+//app.use("/", indexRouter);
+
+var listener = app.listen(3000, function () {
   console.log("Listening on port " + listener.address().port);
 });
