@@ -4,6 +4,7 @@ node_modules
 .browserslistrc
 build
 .codesandbox
+.env
 
 # local env files
 .env.local
