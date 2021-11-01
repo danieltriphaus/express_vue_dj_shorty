@@ -1,10 +1,7 @@
 var express = require("express");
 var cookieParser = require("cookie-parser");
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
-
 var authorizeRouter = require("./routes/authorize");
+var SpotifyErrorHandler = require("./middleware/SpotifyErrorHandler");
 
 var app = express();
 
@@ -14,6 +11,8 @@ app.use(express.static(path));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use(SpotifyErrorHandler);
 
 app.get("/", function (req, res) {
   res.sendFile(path + "index.html");

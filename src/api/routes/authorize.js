@@ -1,18 +1,10 @@
 var express = require("express");
-var router = express.Router();
 var config = require("../../config/spotify.config");
-var AccessToken = require("../lib/classes/AccessToken");
-
-var cookieParser = require("cookie-parser");
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
-
+var AccessToken = require("../../classes/AccessToken");
 var Authorize = require("../controllers/Authorize");
 var AccessTokenRefresher = require("../controllers/AccessTokenRefresher");
 
-router.use(express.json());
-router.use(cookieParser());
+var router = express.Router();
 
 router.post("/", async function (req, res) {
   let authorize = new Authorize({
@@ -21,16 +13,9 @@ router.post("/", async function (req, res) {
     spotifyConfig: config
   });
 
-  await authorize.requestSpotifyOauthTokens().catch((error) => {
-    console.log(error.response);
-    res.statusCode = error.response.status;
-
-    res.json({
-      apiResponse:
-        "Failed Spotify Request, check logs for full Spotify Request",
-      spotifyResponseData: error.response.data
-    });
-  });
+  await authorize
+    .requestSpotifyOauthTokens()
+    .catch(res.respondWithFailedSpotifyRequest);
 
   const accessToken = authorize.getAccessToken();
   /*
@@ -75,16 +60,7 @@ router.get("/", async function (req, res) {
 
   const accessToken = await refresher
     .getRefreshedAccessToken()
-    .catch((error) => {
-      console.log(error.response);
-      res.statusCode = error.response.status;
-
-      res.json({
-        apiResponse:
-          "Failed Spotify Request, check logs for full Spotify Request",
-        spotifyResponseData: error.response.data
-      });
-    });
+    .catch(res.respondWithFailedSpotifyRequest);
 
   res.json(accessToken);
 

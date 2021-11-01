@@ -1,5 +1,5 @@
 const axios = require("axios");
-const AccessToken = require("../lib/classes/AccessToken");
+const AccessToken = require("../../classes/AccessToken.js");
 
 module.exports = class AccessTokenRefresher {
   constructor({ refreshToken, spotifyConfig }) {

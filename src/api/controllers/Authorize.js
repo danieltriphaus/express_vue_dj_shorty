@@ -1,5 +1,5 @@
 let axios = require("axios");
-let AccessToken = require("../lib/classes/AccessToken");
+let AccessToken = require("../../classes/AccessToken");
 
 module.exports = class Authorize {
   _refreshTokenExpiresIn = 10 * 365 * 24 * 60 * 60;

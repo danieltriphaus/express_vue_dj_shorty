@@ -1,5 +1,5 @@
 import axios from "axios";
-import AccessToken from "../api/lib/classes/AccessToken";
+import AccessToken from "../classes/AccessToken";
 
 export default {
   install(Vue, { apiUrl }) {
