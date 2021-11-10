@@ -1,6 +1,7 @@
 var express = require("express");
 var cookieParser = require("cookie-parser");
 var authorizeRouter = require("./routes/authorize");
+var userRouter = require("./routes/user");
 var SpotifyErrorHandler = require("./middleware/SpotifyErrorHandler");
 
 var app = express();
@@ -20,6 +21,7 @@ app.get("/", function (req, res) {
 
 //app.use("/", indexRouter);
 app.use("/api/authorize", authorizeRouter);
+app.use("/api/user", userRouter);
 
 var listener = app.listen(3000, function () {
   console.log("Listening on port " + listener.address().port);

@@ -5,6 +5,7 @@ node_modules
 build
 .codesandbox
 .env
+src/api/views
 
 # local env files
 .env.local

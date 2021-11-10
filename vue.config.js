@@ -1,5 +1,13 @@
+const path = require("path");
+
 module.exports = {
-  configureWebpack: {},
+  configureWebpack: {
+    resolve: {
+      alias: {
+        config: path.resolve(__dirname, "src/config")
+      }
+    }
+  },
   devServer: {
     hot: true,
     disableHostCheck: true,

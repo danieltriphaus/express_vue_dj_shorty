@@ -1,6 +1,6 @@
-import AccessTokenRefresher from "@/api/controllers/AccessTokenRefresher";
+import { AccessTokenRefresher } from "@/api/controllers/AccessTokenRefresher";
 import axios from "axios";
-import AccessToken from "@/api/lib/classes/AccessToken";
+import AccessToken from "@/classes/AccessToken";
 
 jest.mock("axios");
 
@@ -17,7 +17,7 @@ describe("Access Token Refresh Tests", () => {
     clientSecret: "testSecret"
   };
 
-  it("should refresh accessToken when given refresh Token", async () => {
+  it("should refresh accessToken when spotify returns new acess token", async () => {
     const testSpotifyResponse = {
       status: 200,
       data: {
@@ -31,17 +31,17 @@ describe("Access Token Refresh Tests", () => {
 
     axios.mockResolvedValueOnce(testSpotifyResponse);
 
-    const refresher = new AccessTokenRefresher({
-      refreshToken: new AccessToken({
-        value: "test_refresh_token"
-      }),
-      spotifyConfig: testSpotifyConfig
-    });
+    const refresher = AccessTokenRefresher(
+      "test_refresh_token",
+      testSpotifyConfig
+    );
 
     const accessToken = await refresher.getRefreshedAccessToken();
 
-    expect(accessToken).toBeInstanceOf(AccessToken);
-    expect(accessToken.value).toBeTruthy();
+    expect(accessToken).toStrictEqual({
+      value: testSpotifyResponse.data.access_token,
+      expiresIn: testSpotifyResponse.data.expires_in
+    });
   });
 
   it("should throw error on failed spotify response", async () => {
@@ -52,12 +52,10 @@ describe("Access Token Refresh Tests", () => {
 
     axios.mockRejectedValueOnce(testSpotifyResponse);
 
-    const refresher = new AccessTokenRefresher({
-      refreshToken: new AccessToken({
-        value: "test_refresh_token"
-      }),
-      spotifyConfig: testSpotifyConfig
-    });
+    const refresher = AccessTokenRefresher(
+      "test_refresh_token",
+      testSpotifyConfig
+    );
 
     await expect(refresher.getRefreshedAccessToken()).rejects.toBeTruthy();
   });

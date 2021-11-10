@@ -1,6 +1,6 @@
 import Authorize from "@/api/controllers/Authorize";
 import axios from "axios";
-import AccessToken from "@/api/lib/classes/AccessToken";
+import AccessToken from "@/classes/AccessToken";
 
 jest.mock("axios");
 
@@ -35,6 +35,7 @@ describe("Tests for Controller that makes authorization at Spotify", () => {
     });
 
     axios.mockResolvedValueOnce(testSpotifyResponse);
+
     await authorize.requestSpotifyOauthTokens();
 
     expect(authorize.accessToken).toStrictEqual(

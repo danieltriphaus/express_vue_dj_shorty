@@ -1,0 +1,28 @@
+<template>
+  <div />
+</template>
+
+<script>
+import config from "config/spotify.config.js";
+import axios from "axios";
+import AccessToken from "../../classes/AccessToken";
+import { spotifyAuthorizeController } from "../features/SpotifyAuthorize/spotifyAuthorizeController.js";
+
+export default {
+  async created() {
+    this.axios = axios.create();
+
+    if (this.$route.query.code) {
+      spotifyAuthorizeController(
+        process.env.VUE_APP_BASEURL,
+        this.$route.query.code,
+        process.env.VUE_APP_APIURL,
+        this.$cookie,
+        this.$router
+      );
+    } else {
+      spotifyAuthorizeController(process.env.VUE_APP_BASEURL);
+    }
+  },
+};
+</script>

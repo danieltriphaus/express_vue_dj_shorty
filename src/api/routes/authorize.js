@@ -1,8 +1,7 @@
 var express = require("express");
 var config = require("../../config/spotify.config");
-var AccessToken = require("../../classes/AccessToken");
 var Authorize = require("../controllers/Authorize");
-var AccessTokenRefresher = require("../controllers/AccessTokenRefresher");
+var { AccessTokenRefresher } = require("../controllers/AccessTokenRefresher");
 
 var router = express.Router();
 
@@ -13,35 +12,21 @@ router.post("/", async function (req, res) {
     spotifyConfig: config
   });
 
-  await authorize
-    .requestSpotifyOauthTokens()
-    .catch(res.respondWithFailedSpotifyRequest);
+  await authorize.requestSpotifyOauthTokens().catch((error) => {
+    res.respondWithFailedSpotifyRequest(error);
+    res.end();
+  });
 
   const accessToken = authorize.getAccessToken();
-  /*
-    res.cookie("spotify_access_token", accessToken.value, {
-      maxAge: accessToken.expiresIn,
-      path: "/"
-    });
-*/
+  const refreshToken = authorize.getRefreshToken();
+
   res.setHeader("Set-Cookie", [
     "spotify_access_token=" +
       accessToken.value +
       "; Max-Age=" +
       accessToken.expiresIn +
-      "; Path=/"
-  ]);
+      "; Path=/",
 
-  const refreshToken = authorize.getRefreshToken();
-  /*
-    res.cookie("spotify_refresh_token", refreshToken.value, {
-      maxAge: refreshToken.expiresIn,
-      path: "/",
-      secure: true,
-      httpOnly: true
-    });
-*/
-  res.setHeader("Set-Cookie", [
     "spotify_refresh_token=" +
       refreshToken.value +
       "; Max-Age=" +
@@ -49,22 +34,28 @@ router.post("/", async function (req, res) {
       "; Path=/; HttpOnly; Secure;"
   ]);
 
+  res.json(accessToken);
+
   res.end();
 });
 
 router.get("/", async function (req, res) {
-  const refresher = new AccessTokenRefresher({
-    refreshToken: new AccessToken({ value: req.cookies.spotify_refresh_token }),
-    spotifyConfig: config
-  });
+  if (req.cookies.spotify_refresh_token) {
+    const refresher = AccessTokenRefresher(
+      req.cookies.spotify_refresh_token,
+      config
+    );
+    const accessToken = await refresher
+      .getRefreshedAccessToken()
+      .catch(res.respondWithFailedSpotifyRequest);
 
-  const accessToken = await refresher
-    .getRefreshedAccessToken()
-    .catch(res.respondWithFailedSpotifyRequest);
+    res.json(accessToken);
 
-  res.json(accessToken);
-
-  res.end();
+    res.end();
+  } else {
+    res.status(403).json("user not logged in");
+    res.end();
+  }
 });
 
 module.exports = router;

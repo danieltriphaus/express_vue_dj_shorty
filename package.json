@@ -7,8 +7,8 @@
     "email": "d.triphaus@outlook.de"
   },
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --dest build",
+    "serve": "vue-cli-service serve src/frontend/main.js",
+    "build": "vue-cli-service build src/frontend/main.js --dest build",
     "test:unit": "vue-cli-service test:unit --runInBand",
     "lint": "vue-cli-service lint",
     "startServer": "nodemon src/api/app.js localhost",
@@ -16,6 +16,7 @@
   },
   "main": "src/main.js",
   "dependencies": {
+    "@google-cloud/datastore": "6.6.0",
     "@vue/cli": "^4.5.15",
     "axios": "0.23.0",
     "cookie-parser": "1.4.5",
