@@ -5,7 +5,10 @@ import VueCookie from "vue-cookie";
 import apiClient from "./plugins/apiClient";
 import spotifyClient from "./plugins/spotifyClient";
 import spotifyConfig from "config/spotify.config";
-import "./assets/css/global.css";
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+//import "./assets/css/global.css";
 
 Vue.config.productionTip = false;
 
