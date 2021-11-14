@@ -1,9 +1,9 @@
 <template>
   <div class="index">
-    <div v-if="!this.accessToken">
-      <router-link to="/authorize">Einloggen bei Spotify</router-link>
+    <div v-if="!accessToken">
+      <router-link to="/authorize"> Einloggen bei Spotify </router-link>
     </div>
-    <div class="spotify_user_info" v-if="this.accessToken">
+    <div v-if="accessToken" class="spotify_user_info">
       Eingeloggt als
       <span class="spotify-text-color">{{ spotifyUser.display_name }}</span>
     </div>
@@ -19,7 +19,6 @@ export default {
   name: "Index",
   data() {
     return {
-      authenticated: false,
       accessToken: {},
       spotifyUser: {},
     };

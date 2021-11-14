@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Index from "../views/Index.vue";
 import Authorize from "../views/Authorize.vue";
 import Host from "../views/Host";
+import NewMusicSession from "../views/NewMusicSession";
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes = [
     path: "/host",
     name: "host",
     component: Host
+  },
+  {
+    path: "/new_music_session",
+    name: "new_music_session",
+    component: NewMusicSession
   }
 ];
 

@@ -1,25 +1,14 @@
 let axios = require("axios");
-let AccessToken = require("../../classes/AccessToken");
 
-module.exports = class Authorize {
-  _refreshTokenExpiresIn = 10 * 365 * 24 * 60 * 60;
+module.exports.Authorize = ({ code, spotifyConfig, baseURL }) => {
+  const refreshTokenExpiresIn = 10 * 365 * 24 * 60 * 60;
+  let accessToken = "";
+  let refreshToken = "";
 
-  constructor({ code, spotifyConfig, baseURL }) {
-    this.code = code;
-    this.spotifyConfig = spotifyConfig;
-    this.baseURL = baseURL;
-  }
-
-  async requestSpotifyOauthTokens() {
-    const spotifyResponse = await this._requestAccessTokensFromSpotify();
-
-    this._setTokensFromResponseData(spotifyResponse.data);
-  }
-
-  async _requestAccessTokensFromSpotify() {
+  async function _requestAccessTokensFromSpotify() {
     const spotifyResponse = await axios(
-      this.spotifyConfig.authorization.baseUrl +
-        this.spotifyConfig.authorization.tokenEndpoint,
+      spotifyConfig.authorization.baseUrl +
+        spotifyConfig.authorization.tokenEndpoint,
       {
         method: "POST",
         headers: {
@@ -27,47 +16,49 @@ module.exports = class Authorize {
           Authorization:
             "Basic " +
             Buffer.from(
-              this.spotifyConfig.clientId +
-                ":" +
-                this.spotifyConfig.clientSecret
+              spotifyConfig.clientId + ":" + spotifyConfig.clientSecret
             ).toString("base64")
         },
         data: encodeURI(
           "grant_type=" +
-            this.spotifyConfig.authorization.grantType +
+            spotifyConfig.authorization.grantType +
             "&code=" +
-            this.code +
+            code +
             "&redirect_uri=" +
-            this.baseURL +
-            this.spotifyConfig.authorization.redirectEndpoint
+            baseURL +
+            spotifyConfig.authorization.redirectEndpoint
         )
       }
     );
 
-    if (spotifyResponse.status !== 200) {
-      throw new Error("Spotify Error Response: " + spotifyResponse);
-    }
-
     return spotifyResponse;
   }
 
-  _setTokensFromResponseData(responseData) {
-    this.accessToken = new AccessToken({
+  function _setTokensFromResponseData(responseData) {
+    accessToken = {
       value: responseData.access_token,
       expiresIn: responseData.expires_in
-    });
+    };
 
-    this.refreshToken = new AccessToken({
+    refreshToken = {
       value: responseData.refresh_token,
-      expiresIn: this._refreshTokenExpiresIn
-    });
+      expiresIn: refreshTokenExpiresIn
+    };
   }
 
-  getAccessToken() {
-    return this.accessToken;
-  }
+  return {
+    async requestSpotifyOauthTokens() {
+      const spotifyResponse = await _requestAccessTokensFromSpotify();
 
-  getRefreshToken() {
-    return this.refreshToken;
-  }
+      _setTokensFromResponseData(spotifyResponse.data);
+    },
+
+    getAccessToken() {
+      return accessToken;
+    },
+
+    getRefreshToken() {
+      return refreshToken;
+    }
+  };
 };

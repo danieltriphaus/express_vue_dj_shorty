@@ -1,9 +1,23 @@
-html {
-  background-color: #141414;
-  color: #ffffff;
-  font-family: sans-serif;
+:root {
+  --bs-body-color: #fff;
+  --bs-body-bg: #212529;
+  --bs-body-color-rgb: 33, 37, 41;
+  --bs-body-bg-rgb: 175, 174, 174;
+  --bs-primary: #faac02;
 }
 
-.spotify-text-color {
-  color: #1d8954;
+.btn-outline-primary {
+  border-color: #faac02;
+  color: #faac02;
+}
+
+.btn-outline-primary:hover {
+  background-color: #faac02;
+  color: #fff !important;
+  border-color: #faac02;
+}
+
+.list-group-item {
+  background-color: #65696e;
+  color: var(--bs-body-color);
 }

@@ -27,7 +27,7 @@ async function refreshAccessToken(apiUrl) {
     throw new Error("Spotify Token Refresh failed, Check Server Logs");
   });
 
-  return response.data;
+  return response.data ? response.data : "";
 }
 
 export { getAccessTokenController };

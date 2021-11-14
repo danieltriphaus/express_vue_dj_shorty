@@ -5,7 +5,6 @@
 <script>
 import config from "config/spotify.config.js";
 import axios from "axios";
-import AccessToken from "../../classes/AccessToken";
 import { spotifyAuthorizeController } from "../features/SpotifyAuthorize/spotifyAuthorizeController.js";
 
 export default {

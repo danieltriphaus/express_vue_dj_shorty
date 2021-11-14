@@ -1,12 +1,12 @@
 var express = require("express");
 var config = require("../../config/spotify.config");
-var Authorize = require("../controllers/Authorize");
+var { Authorize } = require("../controllers/Authorize");
 var { AccessTokenRefresher } = require("../controllers/AccessTokenRefresher");
 
 var router = express.Router();
 
 router.post("/", async function (req, res) {
-  let authorize = new Authorize({
+  let authorize = Authorize({
     code: req.body.code,
     baseURL: process.env.VUE_APP_BASEURL,
     spotifyConfig: config

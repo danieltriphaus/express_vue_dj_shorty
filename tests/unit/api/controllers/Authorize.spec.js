@@ -1,6 +1,5 @@
-import Authorize from "@/api/controllers/Authorize";
+import { Authorize } from "@/api/controllers/Authorize";
 import axios from "axios";
-import AccessToken from "@/classes/AccessToken";
 
 jest.mock("axios");
 
@@ -29,7 +28,7 @@ describe("Tests for Controller that makes authorization at Spotify", () => {
       }
     };
 
-    const authorize = new Authorize({
+    const authorize = Authorize({
       code: "123",
       spotifyConfig: testSpotifyConfig
     });
@@ -38,19 +37,15 @@ describe("Tests for Controller that makes authorization at Spotify", () => {
 
     await authorize.requestSpotifyOauthTokens();
 
-    expect(authorize.accessToken).toStrictEqual(
-      new AccessToken({
-        value: testSpotifyResponse.data.access_token,
-        expiresIn: testSpotifyResponse.data.expires_in
-      })
-    );
+    expect(authorize.getAccessToken()).toStrictEqual({
+      value: testSpotifyResponse.data.access_token,
+      expiresIn: testSpotifyResponse.data.expires_in
+    });
 
-    expect(authorize.refreshToken).toStrictEqual(
-      new AccessToken({
-        value: testSpotifyResponse.data.refresh_token,
-        expiresIn: 10 * 365 * 24 * 60 * 60
-      })
-    );
+    expect(authorize.getRefreshToken()).toStrictEqual({
+      value: testSpotifyResponse.data.refresh_token,
+      expiresIn: 10 * 365 * 24 * 60 * 60
+    });
   });
 
   it("should throw error on false spotify response", async () => {
@@ -59,12 +54,12 @@ describe("Tests for Controller that makes authorization at Spotify", () => {
       data: { error: "invalid_grant", error_text: "invalid authorization code" }
     };
 
-    const authorize = new Authorize({
+    const authorize = Authorize({
       code: "123",
       spotifyConfig: testSpotifyConfig
     });
 
-    axios.mockResolvedValueOnce(testSpotifyResponse);
+    axios.mockRejectedValueOnce(testSpotifyResponse);
 
     await expect(authorize.requestSpotifyOauthTokens()).rejects.toBeTruthy();
   });

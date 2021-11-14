@@ -1,6 +1,5 @@
 import { AccessTokenRefresher } from "@/api/controllers/AccessTokenRefresher";
 import axios from "axios";
-import AccessToken from "@/classes/AccessToken";
 
 jest.mock("axios");
 
