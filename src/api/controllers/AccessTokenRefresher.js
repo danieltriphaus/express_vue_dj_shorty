@@ -1,6 +1,10 @@
 const axios = require("axios");
 
 module.exports.AccessTokenRefresher = (refreshToken, spotifyConfig) => {
+  if (!refreshToken || refreshToken.length === 0) {
+    throw new Error("User not logged in");
+  }
+
   return {
     async getRefreshedAccessToken() {
       const response = await axios({

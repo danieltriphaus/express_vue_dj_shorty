@@ -58,4 +58,9 @@ describe("Access Token Refresh Tests", () => {
 
     await expect(refresher.getRefreshedAccessToken()).rejects.toBeTruthy();
   });
+
+  it("should throw error when refresh_token is undefined", async () => {
+    expect(() => AccessTokenRefresher()).toThrowError();
+    expect(() => AccessTokenRefresher("")).toThrowError();
+  });
 });

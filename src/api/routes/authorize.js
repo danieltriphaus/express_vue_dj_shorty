@@ -40,7 +40,7 @@ router.post("/", async function (req, res) {
 });
 
 router.get("/", async function (req, res) {
-  if (req.cookies.spotify_refresh_token) {
+  try {
     const refresher = AccessTokenRefresher(
       req.cookies.spotify_refresh_token,
       config
@@ -52,8 +52,8 @@ router.get("/", async function (req, res) {
     res.json(accessToken);
 
     res.end();
-  } else {
-    res.status(403).json("user not logged in");
+  } catch (error) {
+    res.status(403).json(error);
     res.end();
   }
 });
