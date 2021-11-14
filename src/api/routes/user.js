@@ -1,24 +1,29 @@
 var express = require("express");
-var { Datastore } = require("@google-cloud/datastore");
+var { saveUser } = require("../features/saveUser/saveUser");
+var { saveUserDatastore } = require("../features/saveUser/saveUserDatastore");
 
 var router = express.Router();
 
 router.post("/", async (req, res) => {
-  const datastore = new Datastore();
+  let datastore = await saveUserDatastore(
+    req.body.spotifyUserId,
+    req.headers["user-agent"],
+    req.cookies.spotify_refresh_token
+  );
+  try {
+    let device = await datastore.getDeviceFromDb();
+    const su = saveUser(device);
 
-  const key = datastore.key(["user", req.body.spotifyUserId]);
-
-  let [user] = await datastore.get(key);
-
-  user = {
-    key,
-    data: {
-      spotifyUserId: req.body.spotifyUserId,
-      refreshToken: req.cookies.spotify_refresh_token
+    if (su.doesDeviceExist(req.cookies.spotify_refresh_token)) {
+      datastore.transactionRollback();
+    } else {
+      await datastore.saveEntities();
     }
-  };
-
-  await datastore.upsert(user);
+  } catch (err) {
+    console.error(err);
+    datastore.transactionRollback();
+    res.status(500).json("datastore error");
+  }
 
   res.statusCode = 200;
   res.end();
