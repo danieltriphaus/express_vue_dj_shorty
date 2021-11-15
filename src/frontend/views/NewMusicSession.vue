@@ -6,28 +6,32 @@
         <input id="waitTime" type="number" class="form-control" />
       </div>
 
-      <!--
-      <div class="row list-group">
-        <label for="playlist">
-          Öffentliche Playlist auswählen oder erstellen
-        </label>
-        <input id="playlist" type="hidden" />
-        <div class="list-group-item btn btn-outline-secondary text-start">
-          <h6>Playlist erstellen</h6>
-        </div>
-        <div class="list-group-item btn btn-outline-secondary">
-          <div class="d-flex w-100 justify-content-between">
-            <h6>Playlist 1</h6>
-            <div class="text-end">Tracks: 45 Länge: 1h 3min</div>
-          </div>
-        </div>
-      </div> -->
-
       <div class="row">
         <label for="playlist">Playlist auswählen oder erstellen</label>
-        <button type="button" class="btn btn-outline-primary">
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          v-if="!playlistCreate"
+          v-on:click="playlistCreate = true"
+        >
           Neue Playlist erstellen
         </button>
+        <div class="input-group g-0" v-if="playlistCreate">
+          <input
+            type="text"
+            id="new-playlist-name"
+            placeholder="Namen eingeben"
+            class="col form-control"
+            v-model="newPlaylistName"
+          />
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            v-on:click="createPlaylist"
+          >
+            <i class="bi bi-check"></i>
+          </button>
+        </div>
 
         <input
           type="radio"
@@ -72,9 +76,25 @@
 </template>
 
 <script>
+import { createPlaylist } from "../features/CreatePlaylist/createPlaylist";
+import { getCurrentSpotifyUser } from "../features/getCurrentSpotifyUser/getCurrentSpotifyUser";
+
 export default {
   data() {
-    return {};
+    return {
+      playlistCreate: false,
+      waitTime: 0,
+      newPlaylistName: "",
+    };
+  },
+  methods: {
+    async createPlaylist() {
+      const accessToken = await this.$getAccessToken();
+      const spotifyUser = await getCurrentSpotifyUser(accessToken);
+
+      await createPlaylist(accessToken, spotifyUser.id, this.newPlaylistName);
+      this.playlistCreate = false;
+    },
   },
 };
 </script>

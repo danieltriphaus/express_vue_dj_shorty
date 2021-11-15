@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import { getAccessTokenController } from "../features/GetAccessToken/getAccessToken";
 import { getCurrentSpotifyUser } from "../features/getCurrentSpotifyUser/getCurrentSpotifyUser";
 import MusicSessionList from "../components/MusicSessionList";
 
@@ -31,16 +30,11 @@ export default {
   },
   data() {
     return {
-      accessToken: "",
       spotifyUser: { display_name: "" },
     };
   },
   async created() {
-    this.accessToken = await getAccessTokenController(
-      process.env.VUE_APP_APIURL,
-      this.$cookie
-    );
-
+    this.accessToken = await this.$getAccessToken();
     this.spotifyUser = await getCurrentSpotifyUser(this.accessToken);
   },
 };

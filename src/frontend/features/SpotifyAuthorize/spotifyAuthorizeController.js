@@ -51,7 +51,7 @@ function redirectToSpotifyLogin(baseUrl) {
       response_type: "code",
       redirect_uri: baseUrl + spotifyConfig.authorization.redirectEndpoint,
       //ToDo: state: CSRF Token
-      scopes: "playlist-modify-public"
+      scope: "playlist-modify-public"
     });
 
   window.location.assign(oauth_redirect_url);
