@@ -15,6 +15,7 @@ export default {
   data() {
     return {
       spotifyUser: {},
+      accessToken: false,
     };
   },
   async created() {

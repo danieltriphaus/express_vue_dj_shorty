@@ -1,9 +1,14 @@
 <template>
   <div class="container">
-    <form id="new-music-session">
+    <form id="new-music-session" v-on:submit.prevent="createMusicSession">
       <div class="row">
         <label for="waitTime">Wartezeit</label>
-        <input id="waitTime" type="number" class="form-control" />
+        <input
+          id="waitTime"
+          type="number"
+          class="form-control"
+          v-model="musicSession.waitTime"
+        />
       </div>
 
       <div class="row">
@@ -36,8 +41,10 @@
 
       <template v-for="playlist in playlists.items">
         <NewMusicSessionPlaylistItem
+          v-bind:value="playlist.id"
           v-bind:playlist="playlist"
           v-bind:key="playlist.id"
+          v-model="musicSession.spotifyPlaylistId"
         />
       </template>
 
@@ -58,6 +65,7 @@ import { createPlaylist } from "../features/Playlists/createPlaylist";
 import { getCurrentSpotifyUser } from "../features/getCurrentSpotifyUser/getCurrentSpotifyUser";
 import { getPlaylists } from "../features/Playlists/getPlaylists";
 import NewMusicSessionPlaylistItem from "../components/NewMusicSessionPlaylistItem";
+import { createNewMusicSession } from "../features/MusicSessions/createNewMusicSession";
 
 export default {
   components: { NewMusicSessionPlaylistItem },
@@ -67,6 +75,10 @@ export default {
       waitTime: 0,
       newPlaylistName: "",
       playlists: [],
+      musicSession: {
+        waitTime: "",
+        spotifyPlaylistId: "",
+      },
     };
   },
   async created() {
@@ -90,6 +102,15 @@ export default {
       });
 
       this.playlistCreate = false;
+    },
+    async createMusicSession() {
+      const newMusicSession = await createNewMusicSession(
+        this.musicSession,
+        this.spotifyUser.id
+      );
+      if (newMusicSession.id.length > 0) {
+        this.$router.push("/host");
+      }
     },
   },
 };

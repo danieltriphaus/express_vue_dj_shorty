@@ -2,6 +2,7 @@ var express = require("express");
 var cookieParser = require("cookie-parser");
 var authorizeRouter = require("./routes/authorize");
 var userRouter = require("./routes/user");
+var musicSessionRouter = require("./routes/music_session");
 var SpotifyErrorHandler = require("./middleware/SpotifyErrorHandler");
 
 var app = express();
@@ -19,9 +20,9 @@ app.get("/", function (req, res) {
   res.sendFile(path + "index.html");
 });
 
-//app.use("/", indexRouter);
 app.use("/api/authorize", authorizeRouter);
 app.use("/api/user", userRouter);
+app.use("/api/music_session", musicSessionRouter);
 
 var listener = app.listen(3000, function () {
   console.log("Listening on port " + listener.address().port);

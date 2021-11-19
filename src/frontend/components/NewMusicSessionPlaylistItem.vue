@@ -6,6 +6,8 @@
       v-bind:id="playlist.id"
       autocomplete="off"
       class="btn-check"
+      v-bind:value="value"
+      v-on:change="$emit('change', $event.target.value)"
     />
     <label class="btn btn-outline-secondary" v-bind:for="playlist.id">
       <div class="d-flex w-100 justify-content-between">
@@ -18,6 +20,14 @@
 
 <script>
 export default {
-  props: ["playlist"],
+  model: {
+    prop: "modelValue",
+    event: "change",
+  },
+  props: {
+    playlist: Object,
+    modelValue: { default: "" },
+    value: { type: String, default: undefined },
+  },
 };
 </script>
