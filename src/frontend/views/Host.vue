@@ -24,6 +24,7 @@
 import { getCurrentSpotifyUser } from "../features/getCurrentSpotifyUser/getCurrentSpotifyUser";
 import MusicSessionList from "../components/MusicSessionList";
 
+
 export default {
   components: {
     MusicSessionList,

@@ -32,36 +32,14 @@
             <i class="bi bi-check"></i>
           </button>
         </div>
-
-        <input
-          type="radio"
-          name="playist"
-          id="playlist1"
-          class="btn-check"
-          autocomplete="off"
-        />
-        <label class="btn btn-outline-secondary" for="playlist1">
-          <div class="d-flex w-100 justify-content-between">
-            <h6>Playlist 1</h6>
-            <div class="text-end">Tracks: 45 Länge: 1h 3min</div>
-          </div>
-        </label>
-
-        <input
-          type="radio"
-          name="playist"
-          id="playlist2"
-          class="btn-check"
-          autocomplete="off"
-          checked
-        />
-        <label class="btn btn-outline-secondary" for="playlist2">
-          <div class="d-flex w-100 justify-content-between">
-            <h6>Playlist 2</h6>
-            <div class="text-end">Tracks: 45 Länge: 1h 3min</div>
-          </div>
-        </label>
       </div>
+
+      <template v-for="playlist in playlists.items">
+        <NewMusicSessionPlaylistItem
+          v-bind:playlist="playlist"
+          v-bind:key="playlist.id"
+        />
+      </template>
 
       <div class="row mt-4">
         <input
@@ -76,23 +54,41 @@
 </template>
 
 <script>
-import { createPlaylist } from "../features/CreatePlaylist/createPlaylist";
+import { createPlaylist } from "../features/Playlists/createPlaylist";
 import { getCurrentSpotifyUser } from "../features/getCurrentSpotifyUser/getCurrentSpotifyUser";
+import { getPlaylists } from "../features/Playlists/getPlaylists";
+import NewMusicSessionPlaylistItem from "../components/NewMusicSessionPlaylistItem";
 
 export default {
+  components: { NewMusicSessionPlaylistItem },
   data() {
     return {
       playlistCreate: false,
       waitTime: 0,
       newPlaylistName: "",
+      playlists: [],
     };
   },
-  methods: {
-    async createPlaylist() {
-      const accessToken = await this.$getAccessToken();
-      const spotifyUser = await getCurrentSpotifyUser(accessToken);
+  async created() {
+    this.accessToken = await this.$getAccessToken();
 
-      await createPlaylist(accessToken, spotifyUser.id, this.newPlaylistName);
+    Promise.all([
+      getPlaylists(this.accessToken),
+      getCurrentSpotifyUser(this.accessToken),
+    ]).then((values) => {
+      [this.playlists, this.spotifyUser] = values;
+    });
+  },
+  methods: {
+    createPlaylist() {
+      createPlaylist(
+        this.accessToken,
+        this.spotifyUser.id,
+        this.newPlaylistName
+      ).then(async () => {
+        this.playlists = await getPlaylists(this.accessToken);
+      });
+
       this.playlistCreate = false;
     },
   },

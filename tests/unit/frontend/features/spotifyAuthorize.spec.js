@@ -19,7 +19,7 @@ describe("Feature spotify authorize tests", () => {
     spotifyAuthorizeController("test_app_url");
 
     expect(testUrl).toBe(
-      "https://accounts.spotify.com/authorize?client_id=5d32c6be193a454aa17e5b420ed8501e&response_type=code&redirect_uri=test_app_url%2Fauthorize&scopes=playlist-modify-public"
+      "https://accounts.spotify.com/authorize?client_id=5d32c6be193a454aa17e5b420ed8501e&response_type=code&redirect_uri=test_app_url%2Fauthorize&scope=playlist-modify-public"
     );
   });
 
