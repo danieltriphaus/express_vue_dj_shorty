@@ -1,3 +1,5 @@
+![workflow](https://github.com/danieltriphaus/express_vue_dj_shorty/actions/workflows/main.yml/badge.svg)
+
 # express_vue_dj_shorty
 
 ## Project setup
