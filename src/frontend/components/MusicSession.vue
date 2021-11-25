@@ -2,12 +2,21 @@
   <div class="list-group-item">
     <div class="col music-session">
       <div class="row">
-        <div class="col">10.11.2021</div>
+        <div class="col">{{ createdAt }}</div>
         <div class="col">
-          <span class="session-status status-active" /> Aktiv
+          <template v-if="musicSession.status === 'active'">
+            <span class="session-status status-active" />
+            Aktiv
+          </template>
+          <template v-else>
+            <span class="session-status status-inactive" />
+            Inaktiv
+          </template>
         </div>
         <div class="col">
-          <a class="btn btn-outline-primary">Beitreten</a>
+          <router-link v-bind:to="playLink" class="btn btn-outline-primary"
+            >Beitreten</router-link
+          >
           <button type="button" class="btn btn-outline-danger">
             <i class="bi bi-trash" />
           </button>
@@ -19,9 +28,13 @@
             type="text"
             class="form-control"
             disabled
-            value="https://djshorty.de/music_session/dwa8d8321jfds8f493128432ffjs8321jsa"
+            v-bind:value="shareLink"
           />
-          <span class="input-group-text"><i class="bi bi-share" /></span>
+          <span
+            class="input-group-text btn btn-outline-light"
+            v-on:click="shareMusicSessionLink"
+            ><i class="bi bi-share"
+          /></span>
         </div>
       </div>
     </div>
@@ -30,8 +43,28 @@
 
 <script>
 export default {
+  props: {
+    musicSession: Object,
+  },
   data() {
     return {};
+  },
+  computed: {
+    createdAt() {
+      const date = new Date(this.musicSession.createdAt);
+      return date.toLocaleDateString();
+    },
+    shareLink() {
+      return process.env.VUE_APP_BASEURL + this.playLink;
+    },
+    playLink() {
+      return "/play/" + this.musicSession.id;
+    },
+  },
+  methods: {
+    async shareMusicSessionLink() {
+      await navigator.share({ title: "DJ Shorty", url: this.shareLink });
+    },
   },
 };
 </script>

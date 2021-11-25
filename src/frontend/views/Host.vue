@@ -16,14 +16,14 @@
       </router-link>
     </div>
 
-    <MusicSessionList />
+    <MusicSessionList v-bind:musicSessions="musicSessions" />
   </div>
 </template>
 
 <script>
 import { getCurrentSpotifyUser } from "../features/getCurrentSpotifyUser/getCurrentSpotifyUser";
 import MusicSessionList from "../components/MusicSessionList";
-
+import { getMusicSessions } from "../features/MusicSessions/getMusicSessions";
 
 export default {
   components: {
@@ -32,11 +32,13 @@ export default {
   data() {
     return {
       spotifyUser: { display_name: "" },
+      musicSessions: [],
     };
   },
   async created() {
     this.accessToken = await this.$getAccessToken();
     this.spotifyUser = await getCurrentSpotifyUser(this.accessToken);
+    this.musicSessions = await getMusicSessions(this.spotifyUser.id);
   },
 };
 </script>

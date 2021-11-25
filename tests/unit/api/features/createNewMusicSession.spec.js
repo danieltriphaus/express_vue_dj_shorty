@@ -1,5 +1,6 @@
 import { createNewMusicSession } from "@/api/features/musicSession/createNewMusicSession";
 import { v4 as uuidv4 } from "uuid";
+import { InvalidTokenError } from "@/api/errors/InvalidTokenError";
 
 jest.mock("@google-cloud/datastore");
 jest.mock("uuid");
@@ -31,5 +32,13 @@ describe("create new music session tests", () => {
     expect(response.musicSession).not.toMatchObject({
       spotifyUserId: musicSessionParams.spotifyUserId
     });
+  });
+
+  it("should return error if refresh_token is invalid", async () => {
+    expect(createNewMusicSession({}, false)).rejects.toThrow(InvalidTokenError);
+    expect(createNewMusicSession({}, undefined)).rejects.toThrow(
+      InvalidTokenError
+    );
+    expect(createNewMusicSession({}, "")).rejects.toThrow(InvalidTokenError);
   });
 });
