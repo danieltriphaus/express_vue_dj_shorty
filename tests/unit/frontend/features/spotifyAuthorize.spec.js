@@ -2,6 +2,7 @@ import { spotifyAuthorizeController } from "@/frontend/features/SpotifyAuthorize
 import VueCookie from "vue-cookie";
 import axios from "axios";
 import { saveSpotifyUser } from "@/frontend/features/SpotifyAuthorize/saveSpotifyUser";
+import spotifyConfig from "@/config/spotify.config";
 
 jest.mock("axios");
 jest.mock("@/frontend/features/SpotifyAuthorize/saveSpotifyUser");
@@ -19,7 +20,9 @@ describe("Feature spotify authorize tests", () => {
     spotifyAuthorizeController("test_app_url");
 
     expect(testUrl).toBe(
-      "https://accounts.spotify.com/authorize?client_id=5d32c6be193a454aa17e5b420ed8501e&response_type=code&redirect_uri=test_app_url%2Fauthorize&scope=playlist-modify-public"
+      "https://accounts.spotify.com/authorize?client_id=" +
+        spotifyConfig.clientId +
+        "&response_type=code&redirect_uri=test_app_url%2Fauthorize&scope=playlist-modify-public"
     );
   });
 
