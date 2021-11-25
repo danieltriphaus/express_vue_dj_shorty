@@ -3,6 +3,10 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SpotifyClientId: test_client_id
+      SpotifyClientSecret: test_client_secret
+      VUE_APP_SPOTIFY_CLIENT_ID: test_client_id
     steps:
     - uses: actions/checkout@v2
     - name: Install modules
