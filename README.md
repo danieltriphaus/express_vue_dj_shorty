@@ -1,4 +1,5 @@
 ![workflow](https://github.com/danieltriphaus/express_vue_dj_shorty/actions/workflows/main.yml/badge.svg)
+[![Maintainability](https://api.codeclimate.com/v1/badges/e7ef06af0fb884d33783/maintainability)](https://codeclimate.com/github/danieltriphaus/express_vue_dj_shorty/maintainability)
 
 # express_vue_dj_shorty
 
