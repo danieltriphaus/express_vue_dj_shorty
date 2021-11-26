@@ -13,14 +13,11 @@ jobs:
       run: yarn
     - name: Run tests
       run: yarn test:unit
-  coverage:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v3.0.0
-        env:
-          CC_TEST_REPORTER_ID: 828a156fb6438c3de0efe354ac5fe7043c0e4687151099c699f0ba51c508ea2b
-        with:
-          coverageCommand: yarn test:unit --coverage
-          coverageLocations: |
-            ${{github.workspace}}/*.lcov:lcov
+    - name: Test & publish code coverage
+      uses: paambaati/codeclimate-action@v3.0.0
+      env:
+        CC_TEST_REPORTER_ID: 828a156fb6438c3de0efe354ac5fe7043c0e4687151099c699f0ba51c508ea2b
+      with:
+        coverageCommand: yarn test:unit --coverage
+        coverageLocations: |
+          ${{github.workspace}}/*.lcov:lcov
