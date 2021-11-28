@@ -6,6 +6,7 @@ build
 .codesandbox
 .env
 src/api/views
+decent-line*.json
 
 # local env files
 .env.local

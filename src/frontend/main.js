@@ -11,8 +11,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./assets/css/global.css";
 
-Vue.config.productionTip = false;
 
+
+Vue.config.productionTip = false;
 Vue.use(VueCookie);
 Vue.use(spotifyAccessToken, { cookie: VueCookie });
 Vue.use(getCurrentUser);

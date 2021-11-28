@@ -19,6 +19,7 @@ export default {
     };
   },
   async created() {
+    console.log(process.env);
     this.accessToken = await this.$getAccessToken();
 
     if (this.accessToken) {

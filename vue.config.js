@@ -1,4 +1,5 @@
 const path = require("path");
+//const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   configureWebpack: {
@@ -6,7 +7,11 @@ module.exports = {
       alias: {
         config: path.resolve(__dirname, "src/config")
       }
-    }
+    },
+    /*
+    plugins: [
+      new Dotenv()
+    ] */
   },
   devServer: {
     hot: true,
