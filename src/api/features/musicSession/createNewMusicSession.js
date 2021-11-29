@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require("uuid");
+const { nanoid } = require("nanoid");
 const { datastoreHandler } = require("../../datastore/datastoreHandler");
 const { InvalidTokenError } = require("../../errors/InvalidTokenError");
 const { MissingParamError } = require("../../errors/MissingParamError");
@@ -38,7 +38,7 @@ const createNewMusicSession = async (params) => {
   }
 
   function generateMusicSessionId() {
-    return uuidv4();
+    return nanoid(21);
   }
 
   function deleteRefreshTokenFromResult() {

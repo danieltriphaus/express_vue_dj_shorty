@@ -1,14 +1,14 @@
 import { createNewMusicSession } from "@/api/features/musicSession/createNewMusicSession";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 import { InvalidTokenError } from "@/api/errors/InvalidTokenError";
 import { MissingParamError } from "@/api/errors/MissingParamError";
 
 jest.mock("@google-cloud/datastore");
-jest.mock("uuid");
+jest.mock("nanoid");
 
 describe("create new music session tests", () => {
   it("should return created music session but leave out refresh token", async () => {
-    uuidv4.mockReturnValue("test_uuid");
+    nanoid.mockReturnValue("test_id");
 
     const musicSessionParams = {
       waitTime: 1,
@@ -24,7 +24,7 @@ describe("create new music session tests", () => {
     });
 
     expect(response.musicSession).toMatchObject({
-      id: "test_uuid",
+      id: "test_id",
       spotifyPlaylistId: musicSessionParams.spotifyPlaylistId,
       waitTime: musicSessionParams.waitTime
     });
