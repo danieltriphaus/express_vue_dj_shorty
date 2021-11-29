@@ -1,7 +1,8 @@
 const { Transaction } = require("@google-cloud/datastore");
 
-const deviceDatastoreHandler = (datastoreInstance, {spotifyUserId, userAgent, spotifyRefreshToken}) => {
-  
+const deviceDatastoreHandler = (datastoreInstance, options) => {
+  const {spotifyUserId, userAgent, spotifyRefreshToken} = options || {};
+
   function getDeviceKey() {
     return datastoreInstance.key([
       "user",

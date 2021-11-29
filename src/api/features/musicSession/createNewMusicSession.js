@@ -1,43 +1,48 @@
-var { Datastore } = require("@google-cloud/datastore");
 const { v4: uuidv4 } = require("uuid");
+const { datastoreHandler } = require("../../datastore/datastoreHandler");
 const { InvalidTokenError } = require("../../errors/InvalidTokenError");
+const { MissingParamError } = require("../../errors/MissingParamError");
 
-const createNewMusicSession = async (musicSessionParams, refreshToken) => {
-  if (refreshToken && refreshToken.length > 0) {
-    const datastore = new Datastore();
+const createNewMusicSession = async (params) => {
+  let newMusicSession = {};
 
-    const musicSessionid = uuidv4();
+  return await (async () => {
+    if (isSpotifyPlaylistIdMissing()) {
+      throw new MissingParamError("Missing Param: 'spotifyPlaylistId'");
+    }
 
-    const musicSessionKey = datastore.key([
-      "user",
-      musicSessionParams.spotifyUserId,
-      "music_session",
-      musicSessionid
-    ]);
+    if (isSpotifyRefreshTokenInvalid()) {
+      throw new InvalidTokenError("Invalid Refresh Token");
+    }
 
-    const musicSession = {
-      waitTime: musicSessionParams.waitTime,
-      spotifyPlaylistId: musicSessionParams.spotifyPlaylistId,
-      createdAt: new Date(),
-      refreshToken: refreshToken,
-      status: "active"
-    };
+    params.id = generateMusicSessionId();
 
-    await datastore.insert({
-      key: musicSessionKey,
-      data: musicSession
-    });
+    const dh = datastoreHandler();
+    newMusicSession = await dh.createNewMusicSession(params);
 
-    delete musicSession.refreshToken;
-
+    deleteRefreshTokenFromResult();
     return {
       musicSession: {
-        id: musicSessionid,
-        ...musicSession
+        id: params.id,
+        ...newMusicSession
       }
     };
-  } else {
-    throw new InvalidTokenError("Invalid Refresh Token");
+  })();
+
+  function isSpotifyPlaylistIdMissing() {
+    return !params.spotifyPlaylistId || !params.hasOwnProperty("spotifyPlaylistId") || params.spotifyPlaylistId.length === 0;
+  }
+
+  function isSpotifyRefreshTokenInvalid() {
+    return !params.spotifyRefreshToken || params.spotifyRefreshToken.length === 0;
+  }
+
+  function generateMusicSessionId() {
+    return uuidv4();
+  }
+
+  function deleteRefreshTokenFromResult() {
+    delete newMusicSession.refreshToken;
   }
 };
 
