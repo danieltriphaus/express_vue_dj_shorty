@@ -4,13 +4,14 @@ const {
   musicSessionDatastoreHandler
 } = require("./musicSessionDatastoreHandler");
 
-const datastoreHandler = () => {
+const datastoreHandler = (options) => {
+  
   const datastore = new Datastore();
   let transaction = undefined;
-
+  
   const subHandlers = [
-    deviceDatastoreHandler(datastore),
-    musicSessionDatastoreHandler(datastore)
+    deviceDatastoreHandler(datastore, options),
+    musicSessionDatastoreHandler(datastore, options)
   ];
 
   function setDataProviderForSubHandlers(dataProvider) {

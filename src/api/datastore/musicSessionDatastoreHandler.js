@@ -3,6 +3,7 @@ const {
 } = require("./musicSessionResultFormatter");
 
 const musicSessionDatastoreHandler = (datastore) => {
+
   return {
     dataProvider: datastore,
 
@@ -13,7 +14,7 @@ const musicSessionDatastoreHandler = (datastore) => {
         .createQuery("music_session")
         .select(["createdAt", "spotifyPlaylistId", "status", "waitTime"])
         .hasAncestor(ancestorKey);
-
+      
       const [result] = await this.dataProvider.runQuery(query);
 
       return musicSessionResultFormatter(

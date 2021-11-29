@@ -8,6 +8,9 @@ module.exports = {
         config: path.resolve(__dirname, "src/config")
       }
     },
+    watchOptions: {
+      poll: 1000,
+    }
     /*
     plugins: [
       new Dotenv()

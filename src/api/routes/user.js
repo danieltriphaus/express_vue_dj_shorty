@@ -1,10 +1,12 @@
 var express = require("express");
 var { saveUser } = require("../features/saveUser/saveUser");
 var { saveUserDatastore } = require("../features/saveUser/saveUserDatastore");
+var { datastoreHandler } = require("../datastore/datastoreHandler");
+const { saveDevice } = require("../features/device/saveDevice");
 
 var router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/nowhere", async (req, res) => {
   let datastore = await saveUserDatastore(
     req.body.spotifyUserId,
     req.headers["user-agent"],
@@ -27,6 +29,21 @@ router.post("/", async (req, res) => {
 
   res.statusCode = 200;
   res.end();
+});
+
+router.post("/", async (req, res) => {
+  try {
+    await saveDevice(
+      req.body.spotifyUserId,
+      req.headers["user-agent"],
+      req.cookies.spotify_refresh_token
+    );
+  } catch(error) {
+    console.error(error);
+    res.status(500).json("datastore error");
+  }
+
+  res.status(200).end();
 });
 
 module.exports = router;

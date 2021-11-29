@@ -1,15 +1,14 @@
 <template>
   <div class="index">
-    <div v-if="!this.accessToken">
-      <router-link to="/authorize"> Einloggen bei Spotify </router-link>
+    <div v-if="!accessToken">
+      <router-link to="/authorize">
+        Einloggen bei Spotify 
+      </router-link>
     </div>
   </div>
 </template>
 
 <script>
-import { getCurrentSpotifyUser } from "../features/getCurrentSpotifyUser/getCurrentSpotifyUser";
-import axios from "axios";
-
 export default {
   name: "Index",
   data() {
@@ -19,7 +18,6 @@ export default {
     };
   },
   async created() {
-    console.log(process.env);
     this.accessToken = await this.$getAccessToken();
 
     if (this.accessToken) {
