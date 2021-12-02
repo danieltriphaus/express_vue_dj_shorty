@@ -19,7 +19,7 @@ router.post("/", async function (req, res) {
 
   const accessToken = authorize.getAccessToken();
   const refreshToken = authorize.getRefreshToken();
-
+  
   res.setHeader("Set-Cookie", [
     "spotify_access_token=" +
       accessToken.value +
@@ -31,7 +31,7 @@ router.post("/", async function (req, res) {
       refreshToken.value +
       "; Max-Age=" +
       refreshToken.expiresIn +
-      "; Path=/; HttpOnly; Secure;"
+      "; Path=/; HttpOnly"
   ]);
 
   res.json(accessToken);

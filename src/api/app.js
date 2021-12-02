@@ -28,8 +28,8 @@ app.get("/", function (req, res) {
 });
 
 app.use("/api/authorize", authorizeRouter);
+userRouter.use("/:spotifyUserId/music_session", musicSessionRouter);
 app.use("/api/user", userRouter);
-app.use("/api/music_session", musicSessionRouter);
 
 var listener = app.listen(3000, function () {
   console.log("Listening on port " + listener.address().port);

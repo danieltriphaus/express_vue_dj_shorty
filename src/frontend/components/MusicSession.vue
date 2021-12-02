@@ -2,7 +2,9 @@
   <div class="list-group-item">
     <div class="col music-session">
       <div class="row">
-        <div class="col">{{ createdAt }}</div>
+        <div class="col">
+          {{ createdAt }}
+        </div>
         <div class="col">
           <template v-if="musicSession.status === 'active'">
             <span class="session-status status-active" />
@@ -14,10 +16,17 @@
           </template>
         </div>
         <div class="col">
-          <router-link v-bind:to="playLink" class="btn btn-outline-primary"
-            >Beitreten</router-link
+          <router-link
+            :to="playLink"
+            class="btn btn-outline-primary"
           >
-          <button type="button" class="btn btn-outline-danger">
+            Beitreten
+          </router-link>
+          <button
+            type="button"
+            class="btn btn-outline-danger"
+            @click="deactivateSession"
+          >
             <i class="bi bi-trash" />
           </button>
         </div>
@@ -28,13 +37,14 @@
             type="text"
             class="form-control"
             disabled
-            v-bind:value="shareLink"
-          />
+            :value="shareLink"
+          >
           <span
             class="input-group-text btn btn-outline-light"
-            v-on:click="shareMusicSessionLink"
-            ><i class="bi bi-share"
-          /></span>
+            @:click="shareMusicSessionLink"
+          >
+            <i class="bi bi-share" />
+          </span>
         </div>
       </div>
     </div>
@@ -42,17 +52,34 @@
 </template>
 
 <script>
+import { deactivateMusicSession } from "../features/MusicSessions/deactivateMusicSession";
+
 export default {
   props: {
-    musicSession: Object,
+    spotifyUserId: {
+      type: String,
+      default() {
+        return ""
+      }
+    },
+    musicSession: {
+      type: Object,
+      default() {
+        return {}
+      }
+    }
   },
   data() {
     return {};
   },
   computed: {
     createdAt() {
-      const date = new Date(this.musicSession.createdAt);
-      return date.toLocaleDateString();
+      const date = new Date(this.musicSession.createdAt * 1000);
+      return date.toLocaleDateString(navigator.language, {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      });
     },
     shareLink() {
       return process.env.VUE_APP_BASEURL + this.playLink;
@@ -65,6 +92,10 @@ export default {
     async shareMusicSessionLink() {
       await navigator.share({ title: "DJ Shorty", url: this.shareLink });
     },
+    async deactivateSession() {
+      const updatedMusicSession = await deactivateMusicSession(this.spotifyUserId, this.musicSession.id);
+      this.$emit("music-session-changed", updatedMusicSession);
+    }
   },
 };
 </script>

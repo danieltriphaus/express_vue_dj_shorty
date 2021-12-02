@@ -1,5 +1,8 @@
 <template>
-  <div :class="this.$route.name" class="container">
+  <div 
+    :class="this.$route.name"
+    class="container"
+  >
     <div class="spotify_user_info row">
       <h3>
         Eingeloggt als
@@ -16,7 +19,10 @@
       </router-link>
     </div>
 
-    <MusicSessionList v-bind:musicSessions="musicSessions" />
+    <MusicSessionList 
+      :music-sessions="musicSessions" 
+      :spotify-user-id="spotifyUser.id" 
+    />
   </div>
 </template>
 

@@ -2,7 +2,7 @@ version: "2"
 checks:
   method-lines:
     config:
-      threshold: 25
+      threshold: 50
 
 eslint:
   enabled: true

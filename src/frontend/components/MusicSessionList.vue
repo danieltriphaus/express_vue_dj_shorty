@@ -1,11 +1,15 @@
 <template>
   <div>
     <div
-      class="row list-group music-sessions"
       v-for="musicSession in musicSessions"
-      v-bind:key="musicSession.id"
+      :key="musicSession.id"
+      class="row list-group music-sessions"
     >
-      <MusicSession v-bind:musicSession="musicSession" />
+      <MusicSession 
+        :music-session="musicSession"
+        :spotify-user-id="spotifyUserId"
+        @music-session-changed="reloadMusicSession"
+      />
     </div>
   </div>
 </template>
@@ -18,11 +22,32 @@ export default {
     MusicSession,
   },
   props: {
-    musicSessions: Array,
+    spotifyUserId: {
+      type: String,
+      default() {
+        return ""
+      }
+    },
+    musicSessions: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
   },
   data() {
     return {};
   },
+  methods: {
+    reloadMusicSession(updatedMusicSession) {
+      console.log("here");
+      const changedIndex = this.musicSessions.findIndex((musicSession) => {
+        return musicSession.id = updatedMusicSession.id;
+      });
+
+      this.$set(this.musicSessions, changedIndex, updatedMusicSession);
+    }
+  }
 };
 </script>
 

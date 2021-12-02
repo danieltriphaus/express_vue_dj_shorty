@@ -1,16 +1,11 @@
 import axios from "axios";
 
-const createNewMusicSession = async (musicSessionParams, spotifyUserId) => {
+const createNewMusicSession = async (musicSession, spotifyUserId) => {
   const apiUrl = process.env.VUE_APP_APIURL;
 
   const response = await axios.post(
-    apiUrl + "/music_session",
-    {
-      musicSession: {
-        ...musicSessionParams,
-        spotifyUserId
-      }
-    },
+    apiUrl + "/user/" + spotifyUserId + "/music_session",
+    { musicSession },
     { withCredentials: true }
   );
 

@@ -1,9 +1,6 @@
-const {
-  musicSessionResultFormatter
-} = require("./musicSessionResultFormatter");
+const { musicSessionResultFormatter } = require("./musicSessionResultFormatter");
 
 const musicSessionDatastoreHandler = (datastore) => {
-
   return {
     dataProvider: datastore,
 
@@ -17,9 +14,9 @@ const musicSessionDatastoreHandler = (datastore) => {
       
       const [result] = await this.dataProvider.runQuery(query);
 
-      return musicSessionResultFormatter(
-        result
-      ).formatGetMusicSessionByUserResult();
+      changeQueryResultDateToMilliSecs(result, "createdAt");
+
+      return musicSessionResultFormatter(result).getUniversalEntityArray();
     },
 
     async createNewMusicSession(params) {
@@ -44,8 +41,31 @@ const musicSessionDatastoreHandler = (datastore) => {
       });
       
       return musicSession;
+    },
+
+    async getMusicSession(spotifyUserId, musicSessionId) {
+      const musicSessionKey = datastore.key(["user", spotifyUserId, "music_session", musicSessionId]);
+      const [musicSession] = await this.dataProvider.get(musicSessionKey);
+      return musicSessionResultFormatter(musicSession).getUniversalEntity();
+    },
+
+    async updateMusicSession(spotifyUserId, newMusicSession) {
+      const musicSessionKey = datastore.key(["user", spotifyUserId, "music_session", newMusicSession.id]);
+      const { id, ...newMusicSessionData } = newMusicSession;
+      newMusicSessionData.createdAt = new Date(newMusicSession.createdAt * 1000);
+      
+      await this.dataProvider.update({
+        key: musicSessionKey,
+        data: newMusicSessionData
+      })
     }
   };
+
+  function changeQueryResultDateToMilliSecs(result, dateName) {
+    result.forEach((entity) => {
+      entity[dateName] = entity[dateName] / 1000;
+    })
+  }
 };
 
 module.exports = { musicSessionDatastoreHandler };
