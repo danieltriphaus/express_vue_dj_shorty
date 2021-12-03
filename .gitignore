@@ -8,6 +8,7 @@ build
 src/api/views
 decent-line*.json
 coverage
+*.pem
 
 # local env files
 .env.local

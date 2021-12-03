@@ -1,6 +1,8 @@
 require("dotenv").config();
 
 var express = require("express");
+var https = require("https");
+var fs = require("fs");
 var cookieParser = require("cookie-parser");
 var rateLimit = require("express-rate-limit");
 var authorizeRouter = require("./routes/authorize");
@@ -31,8 +33,21 @@ app.use("/api/authorize", authorizeRouter);
 userRouter.use("/:spotifyUserId/music_session", musicSessionRouter);
 app.use("/api/user", userRouter);
 
-var listener = app.listen(3000, function () {
-  console.log("Listening on port " + listener.address().port);
-});
+const httpsServer = https.createServer({
+  key: fs.readFileSync(process.env.HTTPS_CERT_KEY),
+  cert: fs.readFileSync(process.env.HTTPS_CERT),
+}, app);
+
+
+if (process.env.NODE_ENV === "development") {
+  var listener = app.listen(3000, function () {
+    console.log("Listening on port " + listener.address().port);
+  });
+} else if (process.env.NODE_ENV === "production") {
+  var listener = httpsServer.listen(process.env.PORT, function() {
+    console.log("Listening on port " + listener.address().port);
+  });
+}
+
 
 module.exports = app;

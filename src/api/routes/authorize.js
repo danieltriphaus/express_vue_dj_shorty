@@ -31,7 +31,7 @@ router.post("/", async function (req, res) {
       refreshToken.value +
       "; Max-Age=" +
       refreshToken.expiresIn +
-      "; Path=/; HttpOnly"
+      "; Path=/; Secure; HttpOnly"
   ]);
 
   res.json(accessToken);

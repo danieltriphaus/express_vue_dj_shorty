@@ -1,5 +1,6 @@
+require("dotenv").config();
 const path = require("path");
-//const Dotenv = require('dotenv-webpack');
+const fs = require("fs");
 
 module.exports = {
   configureWebpack: {
@@ -19,6 +20,10 @@ module.exports = {
   devServer: {
     hot: true,
     disableHostCheck: true,
+    https: {
+      key: fs.readFileSync(process.env.HTTPS_CERT_KEY),
+      cert: fs.readFileSync(process.env.HTTPS_CERT),
+    },
     proxy: {
       "/api/": {
         target: "http://localhost:3000/",

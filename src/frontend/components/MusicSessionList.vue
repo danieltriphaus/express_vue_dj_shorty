@@ -40,11 +40,9 @@ export default {
   },
   methods: {
     reloadMusicSession(updatedMusicSession) {
-      console.log("here");
       const changedIndex = this.musicSessions.findIndex((musicSession) => {
-        return musicSession.id = updatedMusicSession.id;
+        return musicSession.id === updatedMusicSession.id;
       });
-
       this.$set(this.musicSessions, changedIndex, updatedMusicSession);
     }
   }
