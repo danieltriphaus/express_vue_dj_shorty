@@ -2,6 +2,25 @@ require("dotenv").config();
 const path = require("path");
 const fs = require("fs");
 
+const devServer = {};
+if (process.env.NODE_ENV === "development") {
+  devServer =  {
+    hot: true,
+    disableHostCheck: true,
+    https: {
+      key: fs.readFileSync(process.env.HTTPS_CERT_KEY),
+      cert: fs.readFileSync(process.env.HTTPS_CERT),
+    },
+    proxy: {
+      "/api/": {
+        target: "http://localhost:3000/",
+        logLevel: "debug",
+        changeOrigin: true
+      }
+    }
+  }
+}
+
 module.exports = {
   configureWebpack: {
     resolve: {
@@ -17,19 +36,5 @@ module.exports = {
       new Dotenv()
     ] */
   },
-  devServer: {
-    hot: true,
-    disableHostCheck: true,
-    https: {
-      key: fs.readFileSync(process.env.HTTPS_CERT_KEY),
-      cert: fs.readFileSync(process.env.HTTPS_CERT),
-    },
-    proxy: {
-      "/api/": {
-        target: "http://localhost:3000/",
-        logLevel: "debug",
-        changeOrigin: true
-      }
-    }
-  }
+  devServer
 };
