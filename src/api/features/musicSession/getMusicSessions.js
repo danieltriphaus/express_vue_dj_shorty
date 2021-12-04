@@ -2,22 +2,12 @@ const { datastoreHandler } = require("../../datastore/datastoreHandler");
 const { InvalidTokenError } = require("../../errors/InvalidTokenError");
 const { MissingParamError } = require("../../errors/MissingParamError");
 
-const getMusicSessions = async (spotifyUserId, refreshToken, userAgent) => {
+const getMusicSessions = async (spotifyUserId) => {
   return await (async () => {
-    const dh = datastoreHandler({
-      spotifyUserId,
-      userAgent,
-      spotifyRefreshToken: refreshToken
-    });
+    const dh = datastoreHandler();
     
     if (isSpotifyUserIdMissing()) {
       throw new MissingParamError("Missing Param: 'SpotifyUserId'");
-    }
-    
-    const device = await dh.getDevice();
-
-    if (isRefreshTokenInvalid(device)) {
-      throw new InvalidTokenError("Invalid Refresh Token");
     }
     
     const musicSessions = await dh.getMusicSessions(spotifyUserId);
@@ -31,10 +21,6 @@ const getMusicSessions = async (spotifyUserId, refreshToken, userAgent) => {
 
   function isSpotifyUserIdMissing() {
     return Boolean(!spotifyUserId || spotifyUserId === "");
-  }
-
-  function isRefreshTokenInvalid(device) {
-    return refreshToken !== device.refreshToken;
   }
 };
 

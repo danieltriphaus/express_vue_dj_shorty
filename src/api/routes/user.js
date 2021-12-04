@@ -10,7 +10,7 @@ router.post("/", async (req, res) => {
   try {
     await saveDevice(
       req.body.spotifyUserId,
-      req.headers["user-agent"],
+      req.cookies.device_id,
       req.cookies.spotify_refresh_token
     );
   } catch(error) {

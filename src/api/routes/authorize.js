@@ -2,6 +2,8 @@ var express = require("express");
 var config = require("../../config/spotify.config");
 var { Authorize } = require("../controllers/Authorize");
 var { AccessTokenRefresher } = require("../controllers/AccessTokenRefresher");
+const { nanoid } = require("nanoid");
+const { InvalidTokenError } = require("../errors/InvalidTokenError");
 
 var router = express.Router();
 
@@ -31,6 +33,12 @@ router.post("/", async function (req, res) {
       refreshToken.value +
       "; Max-Age=" +
       refreshToken.expiresIn +
+      "; Path=/; Secure; HttpOnly",
+    
+    "device_id=" +
+      nanoid(21) +
+      "; Max-Age=" + 
+      refreshToken.expiresIn +
       "; Path=/; Secure; HttpOnly"
   ]);
 
@@ -53,8 +61,12 @@ router.get("/", async function (req, res) {
 
     res.end();
   } catch (error) {
-    res.status(403).json(error);
-    res.end();
+    if (error instanceof InvalidTokenError) {
+      res.status(401).json(error.message);
+    } else {
+      res.status(403).json(error);
+      res.end();
+    }
   }
 });
 

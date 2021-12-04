@@ -2,7 +2,6 @@ import { deviceDatastoreHandler } from "@/api/datastore/deviceDatastoreHandler";
 import { musicSessionDatastoreHandler } from "@/api/datastore/musicSessionDatastoreHandler";
 import { getMusicSessions } from "@/api/features/musicSession/getMusicSessions";
 import { MissingParamError } from "@/api/errors/MissingParamError";
-import { InvalidTokenError } from "@/api/errors/InvalidTokenError";
 
 jest.mock("@/api/datastore/deviceDatastoreHandler");
 jest.mock("@/api/datastore/musicSessionDatastoreHandler");
@@ -25,13 +24,7 @@ describe("Tests for GetMusicSession Feature Controller", () => {
   ];
 
   function mockSubHandlers() {
-    deviceDatastoreHandler.mockReturnValueOnce({
-      async getDevice() {
-        return {
-          refreshToken: fakeMusicSessionResult[0].refreshToken
-        };
-      }
-    });
+    deviceDatastoreHandler.mockReturnValueOnce({});
     musicSessionDatastoreHandler.mockReturnValueOnce({
       dataProvider: {},
       async getMusicSessions() {
@@ -45,8 +38,6 @@ describe("Tests for GetMusicSession Feature Controller", () => {
 
     const result = await getMusicSessions(
       "spotifyUserId",
-      fakeMusicSessionResult[0].refreshToken,
-      "userAgent"
     );
 
     expect(result).not.toEqual(
@@ -65,13 +56,5 @@ describe("Tests for GetMusicSession Feature Controller", () => {
     mockSubHandlers();
 
     expect(getMusicSessions()).rejects.toThrowError(MissingParamError);
-  });
-
-  it("should throw InvalidTokenError if refresh token does not match device refresh token", async () => {
-    mockSubHandlers();
-
-    expect(
-      getMusicSessions("spotifyUserId", "wrong_refresh_token")
-    ).rejects.toThrowError(InvalidTokenError);
   });
 });

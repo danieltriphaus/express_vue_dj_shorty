@@ -1,10 +1,10 @@
 const { datastoreHandler } = require("../../datastore/datastoreHandler");
 
 
-const saveDevice = async (spotifyUserId, userAgent, spotifyRefreshToken) => {
+const saveDevice = async (spotifyUserId, deviceId, spotifyRefreshToken) => {
     const dh = datastoreHandler({
         spotifyUserId,
-        userAgent,
+        deviceId,
         spotifyRefreshToken
     });
     

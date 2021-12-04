@@ -1,8 +1,9 @@
 const axios = require("axios");
+const { InvalidTokenError } = require("../errors/InvalidTokenError");
 
 module.exports.AccessTokenRefresher = (refreshToken, spotifyConfig) => {
   if (!refreshToken || refreshToken.length === 0) {
-    throw new Error("User not logged in");
+    throw new InvalidTokenError("User not logged in");
   }
 
   return {

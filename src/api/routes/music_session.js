@@ -12,7 +12,7 @@ var router = express.Router({mergeParams: true});
 
 router.all("/", async (req, res, next) => {
   try {
-    await authenticateSpotifyUser(req.params.spotifyUserId, req.headers["user-agent"], req.cookies.spotify_refresh_token);
+    await authenticateSpotifyUser(req.params.spotifyUserId, req.cookies.device_id, req.cookies.spotify_refresh_token);
   } catch(error) {
     handleErrors(error, res);
   }
@@ -39,7 +39,7 @@ router.get("/", async (req, res) => {
     const musicSessions = await getMusicSessions(
       req.params.spotifyUserId,
       req.cookies.spotify_refresh_token,
-      req.headers["user-agent"]
+      req.cookies.device_id
     );
 
     res.status(200).json(musicSessions);

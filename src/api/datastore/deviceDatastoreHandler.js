@@ -1,14 +1,14 @@
 const { Transaction } = require("@google-cloud/datastore");
 
 const deviceDatastoreHandler = (datastoreInstance, options) => {
-  const {spotifyUserId, userAgent, spotifyRefreshToken} = options || {};
+  const {spotifyUserId, deviceId, spotifyRefreshToken} = options || {};
 
   function getDeviceKey() {
     return datastoreInstance.key([
       "user",
       spotifyUserId,
       "device",
-      userAgent
+      deviceId
     ]);
   }
 
@@ -22,7 +22,7 @@ const deviceDatastoreHandler = (datastoreInstance, options) => {
     },
 
     async createDevice() {
-      const deviceKey = getDeviceKey(spotifyUserId, userAgent);
+      const deviceKey = getDeviceKey(spotifyUserId, deviceId);
       const userKey = datastoreInstance.key(["user", spotifyUserId]);
       
       await this.dataProvider.upsert([
