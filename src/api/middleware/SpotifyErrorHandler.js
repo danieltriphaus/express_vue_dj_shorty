@@ -1,6 +1,5 @@
 module.exports = (req, res, next) => {
   res.respondWithFailedSpotifyRequest = (error) => {
-    console.log(error.response);
     res.statusCode = error.response.status;
 
     res.json({

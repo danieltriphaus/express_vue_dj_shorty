@@ -2,7 +2,7 @@ require("dotenv").config();
 const path = require("path");
 const fs = require("fs");
 
-const devServer = {};
+let devServer = {};
 if (process.env.NODE_ENV === "development") {
   devServer =  {
     hot: true,
@@ -31,10 +31,6 @@ module.exports = {
     watchOptions: {
       poll: 1000,
     }
-    /*
-    plugins: [
-      new Dotenv()
-    ] */
   },
   devServer
 };
