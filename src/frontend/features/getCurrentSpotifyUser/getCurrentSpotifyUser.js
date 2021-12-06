@@ -10,7 +10,14 @@ const getCurrentSpotifyUser = async (accessToken) => {
       headers: { Authorization: "Bearer " + accessToken }
     });
 
-    const response = await http.get("/me");
+    const response = await http.get("/me")
+      .catch(async (error) => {
+        if (error.response && error.response.status === 401) {
+          await axios.delete(process.env.VUE_APP_APIURL + "/authorize", { withCredentials: true });
+        } else {
+          throw error;
+        }
+      });
 
     viewData = response.data;
   }

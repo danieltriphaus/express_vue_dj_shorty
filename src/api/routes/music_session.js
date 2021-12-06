@@ -4,7 +4,7 @@ const { MissingParamError } = require("../errors/MissingParamError");
 const { createNewMusicSession } = require("../features/musicSession/createNewMusicSession");
 const { getMusicSessions } = require("../features/musicSession/getMusicSessions");
 const { changeMusicSession } = require("../features/musicSession/changeMusicSession");
-const { authenticateSpotifyUser } = require("../middleware/authenticateSpotifyUser");
+const { authenticateDevice } = require("../middleware/authenticateDevice");
 const { NotAuthorizedError } = require("../errors/NotAuthorizedError");
 const { ExternalRequestError } = require("../errors/ExternalRequestError");
 
@@ -12,12 +12,11 @@ var router = express.Router({mergeParams: true});
 
 router.all("/", async (req, res, next) => {
   try {
-    await authenticateSpotifyUser(req.params.spotifyUserId, req.cookies.device_id, req.cookies.spotify_refresh_token);
+    await authenticateDevice(req.params.spotifyUserId, req.cookies.device_id, req.cookies.spotify_refresh_token);
+    next();
   } catch(error) {
     handleErrors(error, res);
   }
-
-  next();
 });
 
 router.post("/", async (req, res) => {
@@ -80,5 +79,7 @@ function handleErrors(error, res) {
     console.log(error);
     throw error;
   }
+
+  res.end();
 }
 

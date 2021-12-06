@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { InvalidTokenError } = require("../errors/InvalidTokenError");
+const { NotAuthorizedError } = require("../errors/NotAuthorizedError");
 
 module.exports.AccessTokenRefresher = (refreshToken, spotifyConfig) => {
   if (!refreshToken || refreshToken.length === 0) {
@@ -25,7 +26,11 @@ module.exports.AccessTokenRefresher = (refreshToken, spotifyConfig) => {
           "grant_type=refresh_token&refresh_token=" + refreshToken
         )
       }).catch((error) => {
-        throw new Error(error);
+        if (error.response && error.response.status === 400) {
+          throw new NotAuthorizedError("Access Invalid or Revoked");
+        } else {
+          throw new Error(error);
+        }
       });
 
       return {

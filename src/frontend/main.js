@@ -15,7 +15,7 @@ import "./assets/css/global.css";
 
 Vue.config.productionTip = false;
 Vue.use(VueCookie);
-Vue.use(spotifyAccessToken, { cookie: VueCookie });
+Vue.use(spotifyAccessToken, { cookie: VueCookie , router});
 Vue.use(getCurrentUser);
 
 /*

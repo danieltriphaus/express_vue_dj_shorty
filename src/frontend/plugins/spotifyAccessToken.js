@@ -1,9 +1,13 @@
 import { getAccessTokenController } from "../features/GetAccessToken/getAccessToken";
 
 const spotifyAccessToken = {
-  install(Vue, { cookie }) {
+  install(Vue, { cookie, router }) {
     Vue.prototype.$getAccessToken = async () => {
-      return await getAccessTokenController(process.env.VUE_APP_APIURL, cookie);
+      try {
+        return await getAccessTokenController(process.env.VUE_APP_APIURL, cookie);
+      } catch (error) {
+        router.push("/");
+      }
     };
   }
 };

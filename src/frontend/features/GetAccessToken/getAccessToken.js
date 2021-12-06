@@ -7,13 +7,9 @@ const getAccessTokenController = async (apiUrl, cookies) => {
   if (ch.isAccessTokenCookieSet()) {
     return ch.getAccessToken();
   } else {
-    try {
-      const accessToken = await refreshAccessToken(apiUrl);
-      ch.setAccessTokenCookie(accessToken);
-      return accessToken.value;
-    } catch (error) {
-      console.error(error);
-    }
+    const accessToken = await refreshAccessToken(apiUrl);
+    ch.setAccessTokenCookie(accessToken);
+    return accessToken.value;
   }
 };
 
@@ -23,7 +19,10 @@ async function refreshAccessToken(apiUrl) {
     baseURL: apiUrl
   });
 
-  const response = await http.get(apiUrl + "/authorize").catch(() => {
+  const response = await http.get(apiUrl + "/authorize").catch(async (error) => {
+    if (error.response && error.response.status === 401) {
+      await axios.delete(process.env.VUE_APP_APIURL + "/authorize", { withCredentials: true });
+    }
     throw new Error("Spotify Token Refresh failed, Check Server Logs");
   });
 

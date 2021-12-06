@@ -1,6 +1,7 @@
 import { getAccessTokenController } from "@/frontend/features/GetAccessToken/getAccessToken";
 import VueCookie from "vue-cookie";
 import axios from "axios";
+import { InvalidTokenError } from "@/api/errors/InvalidTokenError";
 
 jest.mock("axios");
 
@@ -56,9 +57,7 @@ describe("test for access token refresh", () => {
       get: jest.fn().mockRejectedValueOnce(testApiResponse)
     });
 
-    expect(
-      await getAccessTokenController("https://test_api_url", vc)
-    ).toBeUndefined();
+    expect(getAccessTokenController("https://test_api_url", vc)).rejects.toThrowError();
   });
 
   it("should return access_token if cookie is set", async () => {

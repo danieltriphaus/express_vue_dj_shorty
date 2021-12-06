@@ -4,13 +4,13 @@ const { MissingParamError } = require("../errors/MissingParamError");
 const { datastoreHandler } = require("../datastore/datastoreHandler");
 
 
-const authenticateSpotifyUser = async (spotifyUserId, deviceId, spotifyRefreshToken) => {
+const authenticateDevice = async (spotifyUserId, deviceId, spotifyRefreshToken) => {
     if (!spotifyRefreshToken || !spotifyRefreshToken.length) {
         throw new InvalidTokenError("Invalid Refresh Token");
     }
 
     if (!deviceId || !deviceId.length) {
-        throw new MissingParamError("Missing Param 'userAgent'");
+        throw new MissingParamError("Missing Param 'deviceId'");
     }
     
     const dh = datastoreHandler({spotifyUserId, deviceId});
@@ -20,4 +20,4 @@ const authenticateSpotifyUser = async (spotifyUserId, deviceId, spotifyRefreshTo
     }
 };
 
-module.exports = { authenticateSpotifyUser };
+module.exports = { authenticateDevice };

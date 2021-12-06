@@ -4,6 +4,7 @@ var { Authorize } = require("../controllers/Authorize");
 var { AccessTokenRefresher } = require("../controllers/AccessTokenRefresher");
 const { nanoid } = require("nanoid");
 const { InvalidTokenError } = require("../errors/InvalidTokenError");
+const { NotAuthorizedError } = require("../errors/NotAuthorizedError");
 
 var router = express.Router();
 
@@ -42,7 +43,7 @@ router.post("/", async function (req, res) {
       "; Path=/; Secure; HttpOnly"
   ]);
 
-  res.json(accessToken);
+  res.status(200).json(accessToken);
 
   res.end();
 });
@@ -53,21 +54,32 @@ router.get("/", async function (req, res) {
       req.cookies.spotify_refresh_token,
       config
     );
-    const accessToken = await refresher
-      .getRefreshedAccessToken()
-      .catch(res.respondWithFailedSpotifyRequest);
 
-    res.json(accessToken);
+    const accessToken = await refresher.getRefreshedAccessToken();
 
-    res.end();
+    res.status(200).json(accessToken);
+    
   } catch (error) {
-    if (error instanceof InvalidTokenError) {
+    if (error instanceof InvalidTokenError || error instanceof NotAuthorizedError) {
       res.status(401).json(error.message);
     } else {
-      res.status(403).json(error);
+      console.error(error);
+      res.status(500).json(error.message);
       res.end();
     }
   }
+
+  res.end();
+});
+
+router.delete("/", function(req, res) {
+  res.setHeader("Set-Cookie", [
+    "spotify_access_token= ;expires=Thu, Jan 01 1970 00:00:00 UTC; Path=/;",
+    "spotify_refresh_token= ;expires=Thu, Jan 01 1970 00:00:00 UTC; Path=/;",
+    "device_id= ;expires=Thu, Jan 01 1970 00:00:00 UTC; Path=/;",
+  ]);
+
+  res.status(200).json("Authorization Cookies deleted");
 });
 
 module.exports = router;
