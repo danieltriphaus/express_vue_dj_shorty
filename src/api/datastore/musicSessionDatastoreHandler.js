@@ -32,7 +32,8 @@ const musicSessionDatastoreHandler = (datastore) => {
         spotifyPlaylistId: params.spotifyPlaylistId,
         createdAt: new Date(),
         refreshToken: params.spotifyRefreshToken,
-        status: "active"
+        status: "active",
+        encryptionKey: params.encryptionKey
       };
   
       await this.dataProvider.insert({

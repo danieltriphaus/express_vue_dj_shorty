@@ -2,6 +2,7 @@ const { nanoid } = require("nanoid");
 const { datastoreHandler } = require("../../datastore/datastoreHandler");
 const { InvalidTokenError } = require("../../errors/InvalidTokenError");
 const { MissingParamError } = require("../../errors/MissingParamError");
+const crypto = require("crypto");
 
 const createNewMusicSession = async (params) => {
   let newMusicSession = {};
@@ -16,15 +17,15 @@ const createNewMusicSession = async (params) => {
     }
 
     params.id = generateMusicSessionId();
-
+    params.encryptionKey = generateEncryptionKey();
+    
     const dh = datastoreHandler();
     newMusicSession = await dh.createNewMusicSession(params);
 
-    deleteRefreshTokenFromResult();
     return {
       musicSession: {
         id: params.id,
-        ...newMusicSession
+        ...getPublicMusicSession(newMusicSession)
       }
     };
   })();
@@ -41,8 +42,13 @@ const createNewMusicSession = async (params) => {
     return nanoid(21);
   }
 
-  function deleteRefreshTokenFromResult() {
-    delete newMusicSession.refreshToken;
+  function generateEncryptionKey() {
+    return crypto.generateKeySync("aes", { length: 128 }).export().toString("base64");
+  }
+
+  function getPublicMusicSession(musicSession) {
+    const { encryptionKey, refreshToken, ...result } = musicSession;
+    return result;
   }
 };
 

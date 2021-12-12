@@ -27,7 +27,7 @@ module.exports.AccessTokenRefresher = (refreshToken, spotifyConfig) => {
         )
       }).catch((error) => {
         if (error.response && error.response.status === 400) {
-          throw new NotAuthorizedError("Access Invalid or Revoked");
+          throw new NotAuthorizedError(error.response.data.error_description);
         } else {
           throw new Error(error);
         }

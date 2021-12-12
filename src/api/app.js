@@ -8,6 +8,7 @@ var rateLimit = require("express-rate-limit");
 var authorizeRouter = require("./routes/authorize");
 var userRouter = require("./routes/user");
 var musicSessionRouter = require("./routes/music_session");
+var trackRouter = require("./routes/track");
 var SpotifyErrorHandler = require("./middleware/SpotifyErrorHandler");
 
 var app = express();
@@ -31,7 +32,9 @@ app.get("/", function (req, res) {
 
 app.use("/api/authorize", authorizeRouter);
 userRouter.use("/:spotifyUserId/music_session", musicSessionRouter);
+musicSessionRouter.use("/:musicSessionId/track", trackRouter);
 app.use("/api/user", userRouter);
+
 
 const httpsServer = https.createServer({
   key: fs.readFileSync(process.env.HTTPS_CERT_KEY),
