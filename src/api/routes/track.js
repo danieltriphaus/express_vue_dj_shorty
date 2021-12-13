@@ -3,7 +3,9 @@ const { restart } = require("nodemon");
 const { datastoreHandler } = require("../datastore/datastoreHandler");
 const { decryptGuestAccessToken } = require("../features/guestAccessToken/decryptGuestAccessToken");
 const { getGuestAccessToken } = require("../features/guestAccessToken/getGuestAccessToken");
+const { enforceAddTrackDelay } = require("../features/addTrackDelay/enforceAddTrackDelay");
 const { addTrack } = require("../features/track/addTrack");
+const { AddTrackDelayError } = require("../errors/AddTrackDelayError");
 
 const router = express.Router({mergeParams: true});
 
@@ -39,6 +41,27 @@ router.all("/", async function(req, res, next) {
 
 router.get("/", function (req, res) {
     console.log(req.djShorty);
+    res.end();
+});
+
+router.post("/", async function(req, res) {
+    try {
+        const trackDelay = enforceAddTrackDelay(
+            req.headers["x-forwarded-for"].split(",")[0] || req.socket.remoteAddress,
+            req.djShorty.musicSession.id,
+            req.djShorty.musicSession.waitTime
+        ); 
+        await trackDelay.checkGuestAccess();
+
+        await trackDelay.updateTrackLastAdded();
+    } catch(error) {
+        if (error instanceof AddTrackDelayError) {
+            res.status(429).json(error.message);
+        } else {
+            throw error;
+        }
+    }
+
     res.end();
 });
 

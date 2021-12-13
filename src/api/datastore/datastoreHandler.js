@@ -1,8 +1,7 @@
 const { Datastore } = require("@google-cloud/datastore");
 const { deviceDatastoreHandler } = require("./deviceDatastoreHandler");
-const {
-  musicSessionDatastoreHandler
-} = require("./musicSessionDatastoreHandler");
+const { musicSessionDatastoreHandler } = require("./musicSessionDatastoreHandler");
+const { guestAccessDatastoreHandler } = require("./guestAccessDatastoreHandler");
 
 const datastoreHandler = (options) => {
   
@@ -11,7 +10,8 @@ const datastoreHandler = (options) => {
   
   const subHandlers = [
     deviceDatastoreHandler(datastore, options),
-    musicSessionDatastoreHandler(datastore, options)
+    musicSessionDatastoreHandler(datastore, options),
+    guestAccessDatastoreHandler(datastore, options)
   ];
 
   function setDataProviderForSubHandlers(dataProvider) {
