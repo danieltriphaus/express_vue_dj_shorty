@@ -4,6 +4,7 @@ import Index from "../views/Index.vue";
 import Authorize from "../views/Authorize.vue";
 import Host from "../views/Host";
 import NewMusicSession from "../views/NewMusicSession";
+import Play from "../views/Play";
 
 Vue.use(VueRouter);
 
@@ -27,6 +28,11 @@ const routes = [
     path: "/new_music_session",
     name: "new_music_session",
     component: NewMusicSession
+  },
+  {
+    path: "/play/:userId/:musicSessionId",
+    name: "play",
+    component: Play
   }
 ];
 

@@ -85,7 +85,7 @@ export default {
       return process.env.VUE_APP_BASEURL + this.playLink;
     },
     playLink() {
-      return "/" + this.spotifyUserId + "/play/" + this.musicSession.id;
+      return "/play/" + this.spotifyUserId + "/"  + this.musicSession.id;
     },
   },
   methods: {

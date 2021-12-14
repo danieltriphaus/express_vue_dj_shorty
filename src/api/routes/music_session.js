@@ -10,9 +10,13 @@ const { ExternalRequestError } = require("../errors/ExternalRequestError");
 
 var router = express.Router({mergeParams: true});
 
+const restrictedMethods = ["POST", "PATCH", "PUT", "DELETE"]
+
 router.all("/", async (req, res, next) => {
   try {
-    await authenticateDevice(req.params.spotifyUserId, req.cookies.device_id, req.cookies.spotify_refresh_token);
+    if (restrictedMethods.indexOf(req.method) >= 0) {
+      await authenticateDevice(req.params.spotifyUserId, req.cookies.device_id, req.cookies.spotify_refresh_token);
+    }
     next();
   } catch(error) {
     handleErrors(error, res);

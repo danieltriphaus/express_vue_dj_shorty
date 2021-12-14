@@ -21,3 +21,8 @@
   background-color: #65696e;
   color: var(--bs-body-color);
 }
+
+.form-control:focus {
+  border-color: #faab02;
+  box-shadow: 0 0 0 0.2rem #faab0223;
+}
