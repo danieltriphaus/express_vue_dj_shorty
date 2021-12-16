@@ -4,21 +4,22 @@
     :class="focusClass"
   >
     <div class="row">
-      <h4 v-show="!isFocused">
-        Füge Songs zur Playlist hinzu
-      </h4>
-      <div class="d-flex align-items-center d-inline-block inner-addon right-addon">
-        <i class="bi bi-search" />
-        <input 
-          id="searchTracks"
-          type="text"
-          class="form-control"
-          placeholder="Suche Songs auf Spotify"
-          @focus="isFocused = true"
-          @blur="isFocused = false"
-        >
+      <div class="col">
+        <h4 v-show="!isFocused">
+          Füge Songs zur Playlist hinzu
+        </h4>
+        <div class="d-flex align-items-center d-inline-block inner-addon right-addon">
+          <i class="bi bi-search" />
+          <input 
+            id="searchTracks"
+            type="text"
+            class="form-control"
+            placeholder="Suche Songs auf Spotify"
+          >
+        </div>
       </div>
     </div>
+    <SearchResults v-show="isFocused" />
     <div 
       class="row justify-content-center" 
       :class="bottomClass"
@@ -32,10 +33,15 @@
 </template>
 
 <script>
+import SearchResults from "../components/SearchResults";
+
 export default {
+    components: {
+      SearchResults
+    },
     data() {
         return {
-            isFocused: false,
+            isFocused: true,
         }
     },
     computed: {
