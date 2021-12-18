@@ -32,7 +32,7 @@ app.get("/", function (req, res) {
 
 app.use("/api/authorize", authorizeRouter);
 userRouter.use("/:spotifyUserId/music_session", musicSessionRouter);
-musicSessionRouter.use("/:musicSessionId/track", trackRouter);
+musicSessionRouter.use("/:musicSessionId/tracks", trackRouter);
 app.use("/api/user", userRouter);
 
 

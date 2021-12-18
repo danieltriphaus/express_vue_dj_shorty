@@ -12,6 +12,8 @@
           <i class="bi bi-search" />
           <input 
             id="searchTracks"
+            v-model="searchQuery"
+            v-debounce:300ms.lock.fireonempty="search"
             type="text"
             class="form-control"
             placeholder="Suche Songs auf Spotify"
@@ -19,7 +21,10 @@
         </div>
       </div>
     </div>
-    <SearchResults v-show="isFocused" />
+    <SearchResults
+      v-show="isFocused" 
+      :search-results="searchResults"
+    />
     <div 
       class="row justify-content-center" 
       :class="bottomClass"
@@ -34,14 +39,21 @@
 
 <script>
 import SearchResults from "../components/SearchResults";
+import { getDirective } from "vue-debounce";
+import axios from "axios";
 
 export default {
+    directives: {
+        debounce: getDirective(2)
+    },
     components: {
-      SearchResults
+        SearchResults
     },
     data() {
         return {
             isFocused: true,
+            searchQuery: "",
+            searchResults: {},
         }
     },
     computed: {
@@ -50,6 +62,21 @@ export default {
         },
         bottomClass() {
             return this.isFocused ? "bottom" : "";
+        }
+    },
+    methods: {
+        async search() {
+            const response = await axios.get(
+                "/api/user/" + this.$route.params.userId 
+                + "/music_session/" + this.$route.params.musicSessionId + "/tracks", 
+                {
+                    params: { 
+                      q: this.searchQuery,
+                      limit: 5,
+                    }
+                }
+            );
+            this.searchResults = response.data;
         }
     }
 }

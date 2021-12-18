@@ -7,6 +7,7 @@ const { changeMusicSession } = require("../features/musicSession/changeMusicSess
 const { authenticateDevice } = require("../middleware/authenticateDevice");
 const { NotAuthorizedError } = require("../errors/NotAuthorizedError");
 const { ExternalRequestError } = require("../errors/ExternalRequestError");
+const { EntityNotFoundError } = require("../errors/EntityNotFoundError");
 
 var router = express.Router({mergeParams: true});
 
@@ -76,6 +77,8 @@ function handleErrors(error, res) {
     res.status(404).json(error.message);
   } else if (error instanceof NotAuthorizedError) {
     res.status(401).json(error.message);
+  } else if (error instanceof EntityNotFoundError) {
+    res.status(404).json(error.message)
   } else if (error instanceof ExternalRequestError) {
     console.log(error);
     res.status(error.response.status).json(error.message);

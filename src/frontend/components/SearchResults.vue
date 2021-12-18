@@ -1,72 +1,20 @@
 <template>
   <div class="search-results g-0">
-    <div class="result">
-      <div class="search-result">
-        <div class="result-image">
-          <img src="https://via.placeholder.com/640">
-        </div>
-        <div class="meta-data">
-          <h6>Song Titel 12332142 4124 14</h6>
-          Künstler
-        </div>
-        <div class="add-button">
-          <i class="bi bi-plus-circle" />
-        </div>
-      </div>
-    </div>
-    <div class="result">
-      <div class="search-result">
-        <div class="result-image">
-          <img src="https://via.placeholder.com/640">
-        </div>
-        <div class="meta-data">
-          <h6>Song Titel</h6>
-          Künstler
-        </div>
-        <div class="add-button">
-          <i class="bi bi-plus-circle" />
-        </div>
-      </div>
+    <div 
+      v-for="track in searchResultTracks" 
+      :key="track.id"
+      class="result"
+    >
+      <search-result-track :track="track" />
     </div>
     <div class="result load-more-songs">
       Mehr Songs
     </div>
-    <div class="result">
-      <div class="search-result">
-        <div class="result-image">
-          <img src="https://via.placeholder.com/640">
-        </div>
-        <div class="meta-data">
-          <h6>Album Titel</h6>
-          Künstler
-        </div>
-        <div class="add-button">
-          <i class="bi bi-chevron-left" />
-        </div>
-      </div>
-    </div>
-    <div class="result">
-      <div class="search-result">
-        <div class="meta-data-small">
-          <h6>Song Name 001</h6>
-          Künstler
-        </div>
-        <div class="add-button">
-          <i class="bi bi-plus-circle" />
-        </div>
-      </div>
-    </div>
-    <div class="result">
-      <div class="search-result">
-        <div class="meta-data-small">
-          <h6>Song Name 002</h6>
-          Künstler
-        </div>
-        <div class="add-button">
-          <i class="bi bi-plus-circle" />
-        </div>
-      </div>
-    </div>
+    <template
+      v-for="album in searchResultAlbums"
+    >
+      <search-result-album :album="album" :key="album.id"/>
+    </template>
     <div class="result">
       <div class="search-result">
         <div class="result-image">
@@ -84,10 +32,33 @@
 </template>
 
 <script>
+import SearchResultTrack from "./SearchResultTrack";
+import SearchResultAlbum from "./SearchResultAlbum";
+
 export default {
+  components: {
+    SearchResultTrack,
+    SearchResultAlbum
+  },
+  props: {
+    searchResults: {
+      type: Object,
+      default() {
+        return {}
+      }
+    }
+  },
   data() {
       return {};
-  }  
+  },
+  computed: {
+    searchResultTracks() {
+      return this.searchResults.tracks ? this.searchResults.tracks.items : {}
+    },
+    searchResultAlbums() {
+      return this.searchResults.albums ? this.searchResults.albums.items : {}
+    }
+  }
 }
 </script>
 

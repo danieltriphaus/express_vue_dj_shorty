@@ -1,8 +1,8 @@
-function ExternalRequestError(...args) {
-    const response = args.splice(1)[0];
+function ExternalRequestError(response, ...args) {
     const instance = new Error(...args);
     Reflect.setPrototypeOf(instance, Reflect.getPrototypeOf(this));
     instance.response = response;
+    instance.responseData = response.data;
     return instance;
 }
 ExternalRequestError.prototype = Object.create(Error.prototype, {

@@ -1,4 +1,5 @@
 const { Transaction } = require("@google-cloud/datastore");
+const { EntityNotFoundError } = require("../errors/EntityNotFoundError");
 
 const deviceDatastoreHandler = (datastoreInstance, options) => {
   const {spotifyUserId, deviceId, spotifyRefreshToken} = options || {};
@@ -18,6 +19,9 @@ const deviceDatastoreHandler = (datastoreInstance, options) => {
     async getDevice() {
       const key = getDeviceKey();
       const [device] = await this.dataProvider.get(key);
+      if (!device) {
+        throw new EntityNotFoundError("music_session not found");
+      }
       return device;
     },
 
