@@ -1,5 +1,9 @@
 <template>
   <div class="search-results g-0">
+    <spinner
+      :is-loading="isLoading"
+      class="mt-5"
+    />
     <div 
       v-for="track in searchResultTracks" 
       :key="track.id"
@@ -7,40 +11,49 @@
     >
       <search-result-track :track="track" />
     </div>
-    <div class="result load-more-songs">
-      Mehr Songs
+    <div
+      v-show="showMoreSongsButton"
+      class="result load-more-songs"
+      @click="loadMoreSongs"
+    >
+      <spinner :is-loading="isLoadingMoreSongs" />
+      <span v-if="!isLoadingMoreSongs"> Mehr Songs </span>
     </div>
     <template
       v-for="album in searchResultAlbums"
     >
-      <search-result-album :album="album" :key="album.id"/>
+      <search-result-album
+        :key="album.id"
+        :album="album" 
+      />
     </template>
-    <div class="result">
-      <div class="search-result">
-        <div class="result-image">
-          <img src="https://via.placeholder.com/640">
-        </div>
-        <div class="meta-data">
-          <h6>Künstler</h6>
-        </div>
-        <div class="add-button">
-          <i class="bi bi-chevron-left" />
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
 import SearchResultTrack from "./SearchResultTrack";
 import SearchResultAlbum from "./SearchResultAlbum";
+import Spinner from "./Spinner";
 
 export default {
   components: {
     SearchResultTrack,
-    SearchResultAlbum
+    SearchResultAlbum,
+    Spinner
   },
   props: {
+    isLoading: {
+      type: Boolean,
+      default() {
+        return false;
+      }
+    },
+    isLoadingMoreSongs: {
+      type: Boolean,
+      default() {
+        return false;
+      }
+    },
     searchResults: {
       type: Object,
       default() {
@@ -49,7 +62,9 @@ export default {
     }
   },
   data() {
-      return {};
+      return {
+        numberOfSongLoads: 0,
+      };
   },
   computed: {
     searchResultTracks() {
@@ -57,6 +72,15 @@ export default {
     },
     searchResultAlbums() {
       return this.searchResults.albums ? this.searchResults.albums.items : {}
+    },
+    showMoreSongsButton() {
+      return this.searchResults.tracks || this.searchResults.albums;
+    }
+  },
+  methods: {
+    async loadMoreSongs() {
+      this.numberOfSongLoads++;
+      this.$emit("load-more-songs", this.numberOfSongLoads)
     }
   }
 }
@@ -104,13 +128,11 @@ export default {
 .load-more-songs {
   text-align: center;
   font-weight: bolder;
+  padding: 5px 0 5px 0;
 }
 
-/*
-@media (min-width: 576px) {
-    .result-image img {
-        height: 16%;
-    }
+
+.spinner-border {
+  display: inline-block;
 }
-*/
 </style>

@@ -26,3 +26,7 @@
   border-color: #faab02;
   box-shadow: 0 0 0 0.2rem #faab0223;
 }
+
+.text-primary {
+  color: #faac02 !important;
+}

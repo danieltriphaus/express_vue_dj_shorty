@@ -1,10 +1,8 @@
 const express = require("express");
-const { restart } = require("nodemon");
 const { datastoreHandler } = require("../datastore/datastoreHandler");
 const { decryptGuestAccessToken } = require("../features/guestAccessToken/decryptGuestAccessToken");
 const { getGuestAccessToken } = require("../features/guestAccessToken/getGuestAccessToken");
 const { enforceAddTrackDelay } = require("../features/addTrackDelay/enforceAddTrackDelay");
-const { addTrack } = require("../features/track/addTrack");
 const { AddTrackDelayError } = require("../errors/AddTrackDelayError");
 const { ExternalRequestError } = require("../errors/ExternalRequestError");
 const { searchSpotify } = require("../features/track/searchSpotify");
@@ -58,6 +56,7 @@ router.get("/", async function (req, res) {
             req.query.q,
             req.query.limit,
             req.query.offset,
+            req.query.type,
             req.djShorty.spotifyAccessToken
         );
 

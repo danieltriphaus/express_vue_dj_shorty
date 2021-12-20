@@ -3,7 +3,7 @@ const spotifyConfig = require("../../../config/spotify.config");
 const { ExternalRequestError } = require("../../errors/ExternalRequestError");
 const { MissingParamError } = require("../../errors/MissingParamError");
 
-const searchSpotify = async (query, limit, offset, accessToken) => {
+const searchSpotify = async (query, limit, offset, type, accessToken) => {
     if (!query || !query.length) {
         throw new MissingParamError("no query");
     }
@@ -11,7 +11,7 @@ const searchSpotify = async (query, limit, offset, accessToken) => {
     const response = await axios.get(spotifyConfig.baseUrl + "search", {
         params: {
             q: query,
-            type: "track,album",
+            type: type || "track,album",
             limit,
             offset
         },

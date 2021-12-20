@@ -10,37 +10,31 @@
           {{ artists }}
         </div>
         <div class="add-button">
-          <i class="bi bi-chevron-left" />
+          <i 
+            class="bi"
+            :class="albumButtonIcon"
+            @click="openAlbum"
+          />
         </div>
       </div>
     </div>
-    <div class="result">
-      <div class="search-result">
-        <div class="meta-data-small">
-          <h6>Song Name 001</h6>
-          Künstler
-        </div>
-        <div class="add-button">
-          <i class="bi bi-plus-circle" />
-        </div>
-      </div>
-    </div>
-    <div class="result">
-      <div class="search-result">
-        <div class="meta-data-small">
-          <h6>Song Name 002</h6>
-          Künstler
-        </div>
-        <div class="add-button">
-          <i class="bi bi-plus-circle" />
-        </div>
-      </div>
-    </div>
+    <transition
+      name="open"
+      mode="out-in"
+    >
+      <component
+        :is="albumDrawer"
+        :opened="opened"
+      />
+    </transition>
   </div>
 </template>
 
 <script>
+import AlbumSongList from './AlbumSongList.vue';
+
 export default {
+  components: { AlbumSongList },
     props: {
         album: {
             type: Object,
@@ -49,10 +43,29 @@ export default {
             }
         }
     },
+    data() {
+        return {
+            opened: false,    
+        }
+    },
     computed: {
-      artists() {
-        return this.album.artists.map((element) => element.name).join(', ');
-      }
+        artists() {
+          return this.album.artists.map((element) => element.name).join(', ');
+        },
+        albumButtonIcon() {
+          return this.opened ? "bi-chevron-down" : "bi-chevron-left"
+        },
+        drawerOpenedClass() {
+          return this.opened ? "height: 200px" : "";
+        },
+        albumDrawer() {
+          return this.opened ? "album-song-list" : "";
+        }
+    },
+    methods: {
+        openAlbum() {
+          this.opened = !this.opened;
+        }
     }
 }
 </script>
@@ -94,5 +107,13 @@ export default {
 .meta-data-small {
   display: table-cell;
   padding: 5px;
+}
+
+.open-enter-active, .open-leave-active {
+  transition: max-height 1s ease;
+}
+
+.open-enter, .open-leave-to {
+  max-height: 0 !important;
 }
 </style>

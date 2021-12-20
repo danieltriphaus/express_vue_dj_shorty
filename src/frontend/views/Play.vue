@@ -17,6 +17,8 @@
             type="text"
             class="form-control"
             placeholder="Suche Songs auf Spotify"
+            @focus="isFocused = true"
+            @blur="blurSearchInput"
           >
         </div>
       </div>
@@ -24,6 +26,9 @@
     <SearchResults
       v-show="isFocused" 
       :search-results="searchResults"
+      :is-loading="isLoading"
+      :is-loading-more-songs="isLoadingMoreSongs"
+      @load-more-songs="loadMoreSongs"
     />
     <div 
       class="row justify-content-center" 
@@ -40,7 +45,9 @@
 <script>
 import SearchResults from "../components/SearchResults";
 import { getDirective } from "vue-debounce";
-import axios from "axios";
+import { searchSpotify } from "../features/Tracks/searchSpotify";
+
+const SEARCH_LIMIT = 5;
 
 export default {
     directives: {
@@ -51,9 +58,12 @@ export default {
     },
     data() {
         return {
-            isFocused: true,
+            isFocused: false,
+            isLoading: false,
+            isLoadingMoreSongs: false,
             searchQuery: "",
             searchResults: {},
+            searchHandler: undefined,
         }
     },
     computed: {
@@ -65,18 +75,29 @@ export default {
         }
     },
     methods: {
+        blurSearchInput() {
+          this.isFocused = this.searchResults.tracks || this.searchResults.albums
+        },
+        getSearchHandler() {
+          return this.searchHandler
+              ? this.searchHandler 
+              : searchSpotify(this.$route.params, SEARCH_LIMIT);
+        },
         async search() {
-            const response = await axios.get(
-                "/api/user/" + this.$route.params.userId 
-                + "/music_session/" + this.$route.params.musicSessionId + "/tracks", 
-                {
-                    params: { 
-                      q: this.searchQuery,
-                      limit: 5,
-                    }
-                }
-            );
-            this.searchResults = response.data;
+            this.isLoading = true;
+            
+            this.searchResults = await this.getSearchHandler().searchSpotify(this.searchQuery);
+
+            this.isLoading = false;
+        },
+        async loadMoreSongs(numberOfSongLoads) {
+            this.isLoadingMoreSongs = true;
+            
+            const sh = this.getSearchHandler();
+            const additionalResults = await sh.searchSpotify(this.searchQuery, SEARCH_LIMIT * numberOfSongLoads, "track");
+            this.searchResults.tracks = sh.appendMoreTracks(JSON.parse(JSON.stringify(this.searchResults.tracks)), additionalResults);
+
+            this.isLoadingMoreSongs = false;
         }
     }
 }
