@@ -6,7 +6,7 @@ const searchSpotify = (routeParams, limit) => {
         async searchSpotify(query, offset, type) {
             const response = await axios.get(
                 "/api/user/" + routeParams.userId 
-                + "/music_session/" + routeParams.musicSessionId + "/tracks", 
+                + "/music_session/" + routeParams.musicSessionId + "/guest/search", 
                 {
                     params: { 
                         q: query,

@@ -10,7 +10,7 @@ describe("frontend searchSpotify tests", () => {
         const sh = searchSpotify({userId: "testUser", musicSessionId: "testMusicSession" }, 5);
         await sh.searchSpotify("test_query", 2, "album");
 
-        expect(axios.get).toHaveBeenCalledWith("/api/user/testUser/music_session/testMusicSession/tracks", 
+        expect(axios.get).toHaveBeenCalledWith("/api/user/testUser/music_session/testMusicSession/guest/search", 
             expect.objectContaining({
                 params: expect.objectContaining({
                     q: "test_query",

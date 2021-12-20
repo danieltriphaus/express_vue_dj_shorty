@@ -8,7 +8,7 @@ var rateLimit = require("express-rate-limit");
 var authorizeRouter = require("./routes/authorize");
 var userRouter = require("./routes/user");
 var musicSessionRouter = require("./routes/music_session");
-var trackRouter = require("./routes/track");
+var guestRouter = require("./routes/guest");
 var SpotifyErrorHandler = require("./middleware/SpotifyErrorHandler");
 
 var app = express();
@@ -32,7 +32,7 @@ app.get("/", function (req, res) {
 
 app.use("/api/authorize", authorizeRouter);
 userRouter.use("/:spotifyUserId/music_session", musicSessionRouter);
-musicSessionRouter.use("/:musicSessionId/tracks", trackRouter);
+musicSessionRouter.use("/:musicSessionId/guest", guestRouter);
 app.use("/api/user", userRouter);
 
 
@@ -42,12 +42,13 @@ const httpsServer = https.createServer({
 }, app);
 
 
+let listener;
 if (process.env.NODE_ENV === "development") {
-  var listener = app.listen(3000, function () {
+  listener = app.listen(3000, function () {
     console.log("Listening on port " + listener.address().port);
   });
 } else if (process.env.NODE_ENV === "production") {
-  var listener = httpsServer.listen(process.env.PORT, function() {
+  listener = httpsServer.listen(process.env.PORT, function() {
     console.log("Listening on port " + listener.address().port);
   });
 }

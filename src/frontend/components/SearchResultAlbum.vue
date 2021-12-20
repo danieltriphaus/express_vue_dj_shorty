@@ -25,6 +25,8 @@
       <component
         :is="albumDrawer"
         :opened="opened"
+        :is-loading="isLoading"
+        :album-tracks="albumTracks"
       />
     </transition>
   </div>
@@ -32,6 +34,7 @@
 
 <script>
 import AlbumSongList from './AlbumSongList.vue';
+import axios from "axios";
 
 export default {
   components: { AlbumSongList },
@@ -45,7 +48,9 @@ export default {
     },
     data() {
         return {
-            opened: false,    
+            opened: false,
+            isLoading: false,
+            albumTracks: [],
         }
     },
     computed: {
@@ -63,8 +68,18 @@ export default {
         }
     },
     methods: {
-        openAlbum() {
+        async openAlbum() {
           this.opened = !this.opened;
+          this.isLoading = true;
+
+          const response = await axios.get(
+            "/api/user/" + this.$route.params.userId 
+            + "/music_session/" + this.$route.params.musicSessionId 
+            + "/guest/album/" + this.album.id + "/track");
+
+          this.albumTracks = response.data.items;
+
+          this.isLoading = false;
         }
     }
 }
@@ -110,7 +125,7 @@ export default {
 }
 
 .open-enter-active, .open-leave-active {
-  transition: max-height 1s ease;
+  transition: max-height 0.7s ease;
 }
 
 .open-enter, .open-leave-to {

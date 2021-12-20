@@ -12,39 +12,21 @@
         role="status" 
       />
     </div>
-    <div
-      v-show="!isLoading"
+    <div 
+      v-for="track in albumTracks"
+      :key="track.id"
+      ref="albumTrack"
       class="result"
     >
-      <div class="search-result">
-        <div class="meta-data-small">
-          <h6>Song Name 001</h6>
-          Künstler
-        </div>
-        <div class="add-button">
-          <i class="bi bi-plus-circle" />
-        </div>
-      </div>
-    </div>
-    <div
-      v-show="isLoading"
-      class="result"
-    >
-      <div class="search-result">
-        <div class="meta-data-small">
-          <h6>Song Name 002</h6>
-          Künstler
-        </div>
-        <div class="add-button">
-          <i class="bi bi-plus-circle" />
-        </div>
-      </div>
+      <search-result-small :track="track" />
     </div>
   </div>
 </template>
 
 <script>
+import SearchResultSmall from './SearchResultSmall.vue';
 export default {
+  components: { SearchResultSmall },
     props: {
         opened: {
             type: Boolean,
@@ -57,13 +39,19 @@ export default {
             default() {
                 return false;
             }
+        },
+        albumTracks: {
+            type: Array,
+            default() {
+              return []
+            }
         }
     },
     computed: {
         calculatedMaxHeight() {
-            const maxHeight = 50 || 81 * 2
+            const maxHeight = this.isLoading ? 50 : this.albumTracks.length * 81 + 160;
             return "max-height: " + maxHeight + "px";
-        }
+        },
     }
 }
 </script>

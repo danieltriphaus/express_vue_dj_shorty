@@ -8,16 +8,17 @@ const { ExternalRequestError } = require("../errors/ExternalRequestError");
 const { searchSpotify } = require("../features/track/searchSpotify");
 const { EntityNotFoundError } = require("../errors/EntityNotFoundError");
 const { MissingParamError } = require("../errors/MissingParamError");
+const { getAlbumTracks } = require("../features/album/getAlbumTracks");
 
 const router = express.Router({mergeParams: true});
 
-let musicSession;
 
-router.all("/", async function(req, res, next) {
+
+router.all("/*", async function(req, res, next) {
     try {
         let guestSpotifyAccessToken;
         const dh = datastoreHandler();
-        musicSession = await dh.getMusicSession(req.params.spotifyUserId, req.params.musicSessionId);
+        const musicSession = await dh.getMusicSession(req.params.spotifyUserId, req.params.musicSessionId);
 
         if (!req.cookies.spotify_access_token) {
             const spotifyAccessTokenCookie = await getGuestAccessToken(musicSession.refreshToken, musicSession.encryptionKey);
@@ -50,7 +51,7 @@ router.all("/", async function(req, res, next) {
     }
 });
 
-router.get("/", async function (req, res) {
+router.get("/search", async function (req, res) {
     try {
         const results = await searchSpotify(
             req.query.q,
@@ -78,7 +79,7 @@ router.get("/", async function (req, res) {
     res.end();
 });
 
-router.post("/", async function(req, res) {
+router.post("/track", async function(req, res) {
     try {
         const trackDelay = enforceAddTrackDelay(
             req.headers["x-forwarded-for"].split(",")[0] || req.socket.remoteAddress,
@@ -93,6 +94,20 @@ router.post("/", async function(req, res) {
             res.status(429).json(error.message);
         } else {
             throw error;
+        }
+    }
+
+    res.end();
+});
+
+router.get("/album/:albumId/track", async function(req, res) {
+    try {
+        const albumTracks = await getAlbumTracks(req.params.albumId, req.djShorty.spotifyAccessToken );
+        
+        res.status(200).json(albumTracks);
+    } catch(error) {
+        if (error instanceof ExternalRequestError) {
+            res.status(400).json("external request error");
         }
     }
 

@@ -110,13 +110,7 @@ export default {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-    }
-
-    .bottom {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
+        margin-bottom: -60px;
     }
 
     .bottom .spotify-logo {
