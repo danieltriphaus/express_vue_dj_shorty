@@ -7,14 +7,14 @@
       <h6>{{ track.name }}</h6>
       {{ artists }}
     </div>
-    <div class="add-button">
-      <i class="bi bi-plus-circle" />
-    </div>
+    <add-track-button :spotify-track-uri="track.uri" />
   </div>
 </template>
 
 <script>
+import AddTrackButton from './AddTrackButton.vue';
 export default {
+  components: { AddTrackButton },
     props: {
         track: {
             type: Object,
@@ -52,12 +52,5 @@ export default {
 
 .result-image img {
     height: 4rem;
-}
-
-.add-button {
-  display: table-cell;
-  font-size: 2.5rem;
-  text-align: right;
-  vertical-align: middle;
 }
 </style>

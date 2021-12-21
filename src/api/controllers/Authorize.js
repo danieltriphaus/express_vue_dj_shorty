@@ -1,4 +1,5 @@
 let axios = require("axios");
+const { ExternalRequestError } = require("../errors/ExternalRequestError");
 
 module.exports.Authorize = ({ code, spotifyConfig, baseURL }) => {
   const refreshTokenExpiresIn = 10 * 365 * 24 * 60 * 60;
@@ -29,7 +30,9 @@ module.exports.Authorize = ({ code, spotifyConfig, baseURL }) => {
             spotifyConfig.authorization.redirectEndpoint
         )
       }
-    );
+    ).catch((error) => {
+      throw new ExternalRequestError(error.response)
+    });
 
     return spotifyResponse;
   }

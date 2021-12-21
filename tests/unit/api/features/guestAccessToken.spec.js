@@ -1,8 +1,8 @@
 import { AccessTokenRefresher } from "@/api/controllers/AccessTokenRefresher";
 import { getGuestAccessToken } from "@/api/features/guestAccessToken/getGuestAccessToken";
 import { decryptGuestAccessToken } from "@/api/features/guestAccessToken/decryptGuestAccessToken";
-import crypto, { generateKey } from "crypto";
-import exp from "constants";
+import crypto  from "crypto";
+import { DecryptionError } from "../../../../src/api/errors/DecryptionError";
 
 jest.mock("@/api/controllers/AccessTokenRefresher");
 
@@ -11,7 +11,7 @@ describe("guestAccessToken tests", () => {
 
     function mockAccessTokenRefresher() {
         AccessTokenRefresher.mockReturnValueOnce({
-            getRefreshedAccessToken(spotifyRefreshToken, spotifyConfig) {
+            getRefreshedAccessToken() {
                 return Promise.resolve(unencryptedAccessToken);
             }
         });
@@ -40,6 +40,16 @@ describe("guestAccessToken tests", () => {
         const decryptedToken = decryptGuestAccessToken(encryptedToken.value, encryptionKey)
 
         expect(decryptedToken).toBe(unencryptedAccessToken.value);
+    });
+
+    it("should throw error when encryption fails", async () => {
+        mockAccessTokenRefresher();
+
+        const encryptionKey = generateEncryptionKey();
+        const encryptedToken = await getGuestAccessToken("test_refresh_token", encryptionKey);
+
+        expect(() => {decryptGuestAccessToken(encryptedToken.value, "wrongKey")}).toThrowError(DecryptionError);
+        expect(() => {decryptGuestAccessToken(encryptedToken.value, generateEncryptionKey())}).toThrowError(DecryptionError);
     });
 });
 

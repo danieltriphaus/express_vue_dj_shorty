@@ -16,7 +16,7 @@ const enforceAddTrackDelay = (spotifyAccessToken, musicSessionId, waitTime) => {
         async updateTrackLastAdded() {
             await dh.upsertGuestAccess({
                 musicSessionId,
-                ipAddress: spotifyAccessToken,
+                spotifyAccessToken,
                 trackLastAdded: new Date()
             });
         }
