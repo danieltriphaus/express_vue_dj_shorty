@@ -82,7 +82,7 @@ router.get("/search", async function (req, res) {
 router.post("/track", async function(req, res) {
     try {
         const trackDelay = enforceAddTrackDelay(
-            req.headers["x-forwarded-for"].split(",")[0] || req.socket.remoteAddress,
+            req.djShorty.spotifyAccessToken,
             req.djShorty.musicSession.id,
             req.djShorty.musicSession.waitTime
         ); 

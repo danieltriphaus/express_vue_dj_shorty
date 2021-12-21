@@ -1,4 +1,5 @@
 const { musicSessionResultFormatter } = require("./musicSessionResultFormatter");
+const { EntityNotFoundError } = require("../errors/EntityNotFoundError");
 
 const musicSessionDatastoreHandler = (datastore) => {
   return {
@@ -47,11 +48,15 @@ const musicSessionDatastoreHandler = (datastore) => {
     async getMusicSession(spotifyUserId, musicSessionId) {
       const musicSessionKey = datastore.key(["user", spotifyUserId, "music_session", musicSessionId]);
       const [musicSession] = await this.dataProvider.get(musicSessionKey);
+      if (!musicSession) {
+        throw new EntityNotFoundError("music_session not found");
+      }
       return musicSessionResultFormatter(musicSession).getUniversalEntity();
     },
 
     async updateMusicSession(spotifyUserId, newMusicSession) {
       const musicSessionKey = datastore.key(["user", spotifyUserId, "music_session", newMusicSession.id]);
+      // eslint-disable-next-line no-unused-vars
       const { id, ...newMusicSessionData } = newMusicSession;
       newMusicSessionData.createdAt = new Date(newMusicSession.createdAt * 1000);
       

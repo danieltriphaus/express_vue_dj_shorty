@@ -3,7 +3,10 @@
     class="container" 
     :class="focusClass"
   >
-    <div class="row">
+    <div 
+      v-if="isMusicSessionActive"
+      class="row"
+    >
       <div class="col">
         <h4 v-show="!isFocused">
           Füge Songs zur Playlist hinzu
@@ -23,6 +26,14 @@
         </div>
       </div>
     </div>
+    <div 
+      v-else 
+      class="row"
+    >
+      <div class="col">
+        <h4>Music Session ist inaktiv oder existiert nicht</h4>
+      </div>
+    </div>
     <SearchResults
       v-show="isFocused" 
       :search-results="searchResults"
@@ -30,7 +41,8 @@
       :is-loading-more-songs="isLoadingMoreSongs"
       @load-more-songs="loadMoreSongs"
     />
-    <div 
+    <div
+      v-if="isMusicSessionActive"
       class="row justify-content-center" 
       :class="bottomClass"
     >
@@ -46,6 +58,7 @@
 import SearchResults from "../components/SearchResults";
 import { getDirective } from "vue-debounce";
 import { searchSpotify } from "../features/Tracks/searchSpotify";
+import axios from "axios";
 
 const SEARCH_LIMIT = 5;
 
@@ -58,6 +71,7 @@ export default {
     },
     data() {
         return {
+            musicSession: undefined,
             isFocused: false,
             isLoading: false,
             isLoadingMoreSongs: false,
@@ -72,7 +86,25 @@ export default {
         },
         bottomClass() {
             return this.isFocused ? "bottom" : "";
+        },
+        doesMusicSessionExist() {
+            return  this.musicSession ? true : false;
+        },
+        isMusicSessionActive() {
+          return this.doesMusicSessionExist && this.musicSession.status === "active"
         }
+    },
+    async created() {
+        const response = await axios.get(
+            "/api/user/" + this.$route.params.userId
+            + "/music_session/" + this.$route.params.musicSessionId )
+            .catch((error) => {
+              if (error.response && error.response.status === 404) {
+                this.musicSession = undefined;
+              }
+            });
+        
+        this.musicSession = response.data ? response.data : {};
     },
     methods: {
         blurSearchInput() {

@@ -1,5 +1,4 @@
 const { datastoreHandler } = require("../../datastore/datastoreHandler");
-const { InvalidTokenError } = require("../../errors/InvalidTokenError");
 const { MissingParamError } = require("../../errors/MissingParamError");
 
 const getMusicSessions = async (spotifyUserId) => {
@@ -14,6 +13,7 @@ const getMusicSessions = async (spotifyUserId) => {
 
     musicSessions.forEach((musicSession) => {
       delete musicSession.refreshToken;
+      delete musicSession.encryptionKey;
     });
 
     return musicSessions;

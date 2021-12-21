@@ -1,13 +1,12 @@
 const { datastoreHandler } = require("../../datastore/datastoreHandler");
-const { nanoid } = require("nanoid");
 const { AddTrackDelayError } = require("../../errors/AddTrackDelayError");
 
-const enforceAddTrackDelay = (ipAddress, musicSessionId, waitTime) => {
+const enforceAddTrackDelay = (spotifyAccessToken, musicSessionId, waitTime) => {
     const dh = datastoreHandler();
 
     return {
         async checkGuestAccess() {
-            const guestAccess = await dh.getGuestAccess(ipAddress, musicSessionId);
+            const guestAccess = await dh.getGuestAccess(spotifyAccessToken);
             
             if (guestAccess && isAddTrackToEarly(guestAccess.trackLastAdded)) {   
                 throw new AddTrackDelayError("Attempted to add track before waitTime elapsed");
@@ -17,7 +16,7 @@ const enforceAddTrackDelay = (ipAddress, musicSessionId, waitTime) => {
         async updateTrackLastAdded() {
             await dh.upsertGuestAccess({
                 musicSessionId,
-                ipAddress,
+                ipAddress: spotifyAccessToken,
                 trackLastAdded: new Date()
             });
         }

@@ -8,6 +8,7 @@ const { authenticateDevice } = require("../middleware/authenticateDevice");
 const { NotAuthorizedError } = require("../errors/NotAuthorizedError");
 const { ExternalRequestError } = require("../errors/ExternalRequestError");
 const { EntityNotFoundError } = require("../errors/EntityNotFoundError");
+const { getMusicSession } = require("../features/musicSession/getMusicSession");
 
 var router = express.Router({mergeParams: true});
 
@@ -40,11 +41,7 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const musicSessions = await getMusicSessions(
-      req.params.spotifyUserId,
-      req.cookies.spotify_refresh_token,
-      req.cookies.device_id
-    );
+    const musicSessions = await getMusicSessions(req.params.spotifyUserId);
 
     res.status(200).json(musicSessions);
   } catch (error) {
@@ -54,6 +51,15 @@ router.get("/", async (req, res) => {
   res.end();
 });
 
+router.get("/:musicSessionId", async function(req, res) {
+  try {
+  const musicSession = await getMusicSession(req.params.spotifyUserId, req.params.musicSessionId);
+
+  res.status(200).json(musicSession);
+  } catch (error) {
+    handleErrors(error, res);
+  }
+});
 
 router.patch("/:musicSessionId", async (req, res) => {
   try {

@@ -4,8 +4,8 @@ const guestAccessDatastoreHandler = (datastore) => {
     return {
         dataProvider: datastore,
 
-        async getGuestAccess(ipAddress, musicSessionId) {
-            const key = this.dataProvider.key(["guest_access", ipAddress]);
+        async getGuestAccess(spotifyAccessToken) {
+            const key = this.dataProvider.key(["guest_access", spotifyAccessToken]);
 
             const [guestAccess] = await this.dataProvider.get(key);
             delete guestAccess[Datastore.KEY];
@@ -13,10 +13,10 @@ const guestAccessDatastoreHandler = (datastore) => {
         },
 
         async upsertGuestAccess(params) {
-            const key = this.dataProvider.key(["guest_access", params.ipAddress]);
+            const key = this.dataProvider.key(["guest_access", params.spotifyAccessToken]);
 
             const data = {
-                ipAddress: params.ipAddress,
+                ipAddress: params.spotifyAccessToken,
                 musicSessionId: params.musicSessionId,
                 trackLastAdded: params.trackLastAdded
             };
