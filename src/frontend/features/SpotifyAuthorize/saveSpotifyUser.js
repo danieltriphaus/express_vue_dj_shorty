@@ -2,16 +2,17 @@ import axios from "axios";
 import { getCurrentSpotifyUser } from "../getCurrentSpotifyUser/getCurrentSpotifyUser";
 
 const saveSpotifyUser = async (apiUrl, accessToken) => {
+  /*
   const apiClient = axios.create({
     withCredentials: true,
     baseURL: apiUrl
   });
-
+*/
   const spotifyUser = await getCurrentSpotifyUser(accessToken);
 
-  await apiClient.post("/user", {
+  await axios.post("/api/user", {
     spotifyUserId: spotifyUser.id
-  });
+  }, { withCredentials: true });
 };
 
 export { saveSpotifyUser };

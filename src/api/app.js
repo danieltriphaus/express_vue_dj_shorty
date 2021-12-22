@@ -5,6 +5,7 @@ var https = require("https");
 var fs = require("fs");
 var cookieParser = require("cookie-parser");
 var rateLimit = require("express-rate-limit");
+var history = require("connect-history-api-fallback");
 var authorizeRouter = require("./routes/authorize");
 var userRouter = require("./routes/user");
 var musicSessionRouter = require("./routes/music_session");
@@ -15,7 +16,6 @@ var app = express();
 
 const path = __dirname + "/views/";
 
-app.use(express.static(path));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -26,21 +26,23 @@ app.use(rateLimit({
 
 app.use(SpotifyErrorHandler);
 
-app.get("/", function (req, res) {
-  res.sendFile(path + "index.html");
-});
-
 app.use("/api/authorize", authorizeRouter);
 userRouter.use("/:spotifyUserId/music_session", musicSessionRouter);
 musicSessionRouter.use("/:musicSessionId/guest", guestRouter);
 app.use("/api/user", userRouter);
 
 
+app.use(history({
+  verbose: true
+}));
+app.use(express.static(path));
+
+/*
 const httpsServer = https.createServer({
   key: fs.readFileSync(process.env.HTTPS_CERT_KEY),
   cert: fs.readFileSync(process.env.HTTPS_CERT),
 }, app);
-
+*/
 
 let listener;
 if (process.env.NODE_ENV === "development") {
@@ -48,7 +50,12 @@ if (process.env.NODE_ENV === "development") {
     console.log("Listening on port " + listener.address().port);
   });
 } else if (process.env.NODE_ENV === "production") {
+  /*
   listener = httpsServer.listen(process.env.PORT, function() {
+    console.log("Listening on port " + listener.address().port);
+  });
+  */
+  listener = app.listen(process.env.PORT, function () {
     console.log("Listening on port " + listener.address().port);
   });
 }

@@ -22,7 +22,7 @@ router.all("/*", async function(req, res, next) {
         const dh = datastoreHandler();
         const musicSession = await dh.getMusicSession(req.params.spotifyUserId, req.params.musicSessionId);
 
-        if (req.cookies.spotify_access_token || isHost(req)) {
+        if (req.cookies.spotify_access_token) {
             guestSpotifyAccessToken = req.cookies.spotify_access_token;
         } else {
             const spotifyAccessTokenCookie = await getGuestAccessToken(musicSession.refreshToken, musicSession.encryptionKey);
@@ -38,7 +38,12 @@ router.all("/*", async function(req, res, next) {
             guestSpotifyAccessToken = spotifyAccessTokenCookie.value;
         }
 
-        const spotifyAccessToken = decryptGuestAccessToken(guestSpotifyAccessToken, musicSession.encryptionKey);
+        let spotifyAccessToken;
+        if (isHost(req)) {
+            spotifyAccessToken = req.cookies.spotify_access_token;
+        } else {
+            spotifyAccessToken = decryptGuestAccessToken(guestSpotifyAccessToken, musicSession.encryptionKey);
+        }
 
         req.djShorty = { spotifyAccessToken, musicSession };
 

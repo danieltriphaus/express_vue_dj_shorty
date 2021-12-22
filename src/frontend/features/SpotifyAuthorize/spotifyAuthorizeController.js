@@ -24,17 +24,18 @@ const spotifyAuthorizeController = async (
   }
 };
 
-async function postAuthCode(authCode, apiUrl) {
+async function postAuthCode(authCode) {
+  /*
   const http = axios.create({
     withCredentials: true,
     baseURL: apiUrl
   });
-
-  const response = await http
-    .post("/authorize", {
+*/
+  const response = await axios
+    .post("/api/authorize", {
       code: authCode
-    })
-    .catch((error) => {
+    }, { withCredentials: true })
+    .catch(() => {
       throw new Error("Spotify Authorization failed, check Server Logs");
     });
 

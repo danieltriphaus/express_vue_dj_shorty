@@ -1,7 +1,6 @@
 import { spotifyAuthorizeController } from "@/frontend/features/SpotifyAuthorize/spotifyAuthorizeController";
 import VueCookie from "vue-cookie";
 import axios from "axios";
-import { saveSpotifyUser } from "@/frontend/features/SpotifyAuthorize/saveSpotifyUser";
 import spotifyConfig from "@/config/spotify.config";
 
 jest.mock("axios");
@@ -39,6 +38,8 @@ describe("Feature spotify authorize tests", () => {
     axios.create.mockReturnValueOnce({
       post: jest.fn().mockResolvedValueOnce(testApiResponse)
     });
+
+    axios.post.mockResolvedValueOnce(testApiResponse);
 
     await spotifyAuthorizeController(
       "test_base_url",

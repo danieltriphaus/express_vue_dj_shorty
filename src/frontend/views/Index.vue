@@ -18,10 +18,17 @@ export default {
     };
   },
   async created() {
-    this.accessToken = await this.$getAccessToken();
+    if (this.$route.query.code) {
+      this.$router.push({
+        path: "/authorize",
+        query: this.$route.query
+      });
+    } else {
+      this.accessToken = await this.$getAccessToken();
 
-    if (this.accessToken) {
-      this.$router.push("/host");
+      if (this.accessToken) {
+        this.$router.push("/host");
+      }
     }
   },
 };

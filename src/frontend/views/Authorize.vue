@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import config from "config/spotify.config.js";
 import axios from "axios";
 import { spotifyAuthorizeController } from "../features/SpotifyAuthorize/spotifyAuthorizeController.js";
 
@@ -13,7 +12,7 @@ export default {
 
     if (this.$route.query.code) {
       spotifyAuthorizeController(
-        process.env.VUE_APP_BASEURL,
+        process.env.BASE_URL,
         this.$route.query.code,
         process.env.VUE_APP_APIURL,
         this.$cookie,
