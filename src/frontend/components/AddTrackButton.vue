@@ -41,10 +41,12 @@ export default {
             this.isLoading = true;
 
             try {
-                this.wasSuccessful = await addTrack(this.route.params, this.spotifyTrackUri);
+                this.wasSuccessful = await addTrack(this.$route.params, this.spotifyTrackUri);
             } catch(error) {
                 if (error instanceof AddTrackDelayError) {
                     this.wasSuccessful = false;
+                } else {
+                  throw error
                 }
             }
             
