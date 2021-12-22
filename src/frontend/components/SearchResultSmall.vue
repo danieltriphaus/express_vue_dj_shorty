@@ -4,14 +4,14 @@
       <h6>{{ track.name }}</h6>
       {{ artists }}
     </div>
-    <div class="add-button">
-      <i class="bi bi-plus-circle" />
-    </div>
+    <add-track-button :spotify-track-uri="track.uri" />
   </div>
 </template>
 
 <script>
+import AddTrackButton from './AddTrackButton.vue';
 export default {
+  components: { AddTrackButton },
     props: {
         track: {
             type: Object,
