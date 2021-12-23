@@ -35,7 +35,7 @@ app.use("/api/user", userRouter);
 app.use(history({
   verbose: true
 }));
-app.use(express.static(path));
+app.use(express.static(path, { etag: false, lastModified: false }));
 
 /*
 const httpsServer = https.createServer({
