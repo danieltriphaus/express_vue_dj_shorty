@@ -1,8 +1,6 @@
 require("dotenv").config();
 
 var express = require("express");
-var https = require("https");
-var fs = require("fs");
 var cookieParser = require("cookie-parser");
 var rateLimit = require("express-rate-limit");
 var history = require("connect-history-api-fallback");

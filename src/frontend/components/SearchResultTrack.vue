@@ -1,7 +1,7 @@
 <template>
   <div class="search-result">
     <div class="result-image">
-      <img :src="track.album.images[2].url">
+      <img :src="track.album.images[1].url">
     </div>
     <div class="meta-data">
       <h6>{{ track.name }}</h6>

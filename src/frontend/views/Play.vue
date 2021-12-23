@@ -15,6 +15,7 @@
           <i class="bi bi-search" />
           <input 
             id="searchTracks"
+            ref="searchTracks"
             v-debounce:300ms.lock.fireonempty="search"
             type="text"
             class="form-control"
@@ -41,6 +42,7 @@
       :is-loading="isLoading"
       :is-loading-more-songs="isLoadingMoreSongs"
       @load-more-songs="loadMoreSongs"
+      @touchstart.native="triggerBlurOnSearch"
     />
     <div
       v-if="isMusicSessionActive"
@@ -112,6 +114,9 @@ export default {
     methods: {
         blurSearchInput() {
           this.isFocused = this.searchResults.tracks || this.searchResults.albums
+        },
+        triggerBlurOnSearch() {
+          this.$refs.searchTracks.blur()
         },
         getSearchHandler() {
           return this.searchHandler

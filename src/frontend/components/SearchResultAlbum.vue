@@ -3,7 +3,7 @@
     <div class="result">
       <div class="search-result">
         <div class="result-image">
-          <img :src="album.images[2].url">
+          <img :src="album.images[1].url">
         </div>
         <div class="meta-data">
           <h6>{{ album.name }}</h6>
