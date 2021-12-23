@@ -1,7 +1,7 @@
 <template>
   <div 
     v-if="isLoading"
-    class="row"
+    class="row spinner"
   >
     <div class="col text-center">
       <div

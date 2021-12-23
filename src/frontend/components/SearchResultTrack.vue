@@ -7,7 +7,10 @@
       <h6>{{ track.name }}</h6>
       {{ artists }}
     </div>
-    <add-track-button :spotify-track-uri="track.uri" />
+    <add-track-button
+      :spotify-track-uri="track.uri"
+      @track-added="$emit('track-added')"
+    />
   </div>
 </template>
 

@@ -18,7 +18,10 @@
       ref="albumTrack"
       class="result"
     >
-      <search-result-small :track="track" />
+      <search-result-small
+        :track="track"
+        @track-added="$emit('track-added')"
+      />
     </div>
   </div>
 </template>

@@ -1,60 +1,66 @@
 <template>
   <div class="container">
-    <form id="new-music-session" v-on:submit.prevent="createMusicSession">
+    <form
+      id="new-music-session"
+      @submit.prevent="createMusicSession"
+    >
       <div class="row">
         <label for="waitTime">Wartezeit</label>
         <input
           id="waitTime"
+          v-model="musicSession.waitTime"
           type="number"
           class="form-control"
-          v-model="musicSession.waitTime"
-        />
+        >
       </div>
 
       <div class="row">
         <label for="playlist">Playlist auswählen oder erstellen</label>
         <button
+          v-if="!playlistCreate"
           type="button"
           class="btn btn-outline-primary"
-          v-if="!playlistCreate"
-          v-on:click="playlistCreate = true"
+          @click="playlistCreate = true"
         >
           Neue Playlist erstellen
         </button>
-        <div class="input-group g-0" v-if="playlistCreate">
+        <div
+          v-if="playlistCreate"
+          class="input-group g-0"
+        >
           <input
-            type="text"
             id="new-playlist-name"
+            v-model="newPlaylistName"
+            type="text"
             placeholder="Namen eingeben"
             class="col form-control"
-            v-model="newPlaylistName"
-          />
+          >
           <button
             type="button"
             class="btn btn-outline-primary"
-            v-on:click="createPlaylist"
+            @click="createPlaylist"
           >
-            <i class="bi bi-check"></i>
+            <i class="bi bi-check" />
           </button>
         </div>
       </div>
 
       <template v-for="playlist in playlists.items">
         <NewMusicSessionPlaylistItem
-          v-bind:value="playlist.id"
-          v-bind:playlist="playlist"
-          v-bind:key="playlist.id"
+          :key="playlist.id"
           v-model="musicSession.spotifyPlaylistId"
+          :value="playlist.id"
+          :playlist="playlist"
         />
       </template>
 
       <div class="row mt-4">
         <input
-          type="submit"
           id="submit"
+          type="submit"
           class="form-control btn btn-outline-primary"
           value="Erstellen"
-        />
+        >
       </div>
     </form>
   </div>

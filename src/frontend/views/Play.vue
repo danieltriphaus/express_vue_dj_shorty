@@ -17,7 +17,7 @@
             id="searchTracks"
             ref="searchTracks"
             v-debounce:300ms.lock.fireonempty="search"
-            type="text"
+            type="search"
             class="form-control"
             placeholder="Suche Songs auf Spotify"
             :value="searchQuery"
@@ -43,6 +43,7 @@
       :is-loading-more-songs="isLoadingMoreSongs"
       @load-more-songs="loadMoreSongs"
       @touchstart.native="triggerBlurOnSearch"
+      @track-added="trackAdded"
     />
     <div
       v-if="isMusicSessionActive"
@@ -138,6 +139,13 @@ export default {
             this.searchResults.tracks = sh.appendMoreTracks(JSON.parse(JSON.stringify(this.searchResults.tracks)), additionalResults);
 
             this.isLoadingMoreSongs = false;
+        },
+        trackAdded() {
+          setTimeout(async () => {
+            this.searchQuery = ""
+            await this.search();
+            this.blurSearchInput();
+          }, 1000)
         }
     }
 }

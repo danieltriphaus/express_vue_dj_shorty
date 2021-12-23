@@ -9,7 +9,10 @@
       :key="track.id"
       class="result"
     >
-      <search-result-track :track="track" />
+      <search-result-track
+        :track="track"
+        @track-added="$emit('track-added')"
+      />
     </div>
     <div
       v-show="showMoreSongsButton"

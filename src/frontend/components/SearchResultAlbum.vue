@@ -27,6 +27,7 @@
         :opened="opened"
         :is-loading="isLoading"
         :album-tracks="albumTracks"
+        @track-addded="$emit('track-added')"
       />
     </transition>
   </div>
