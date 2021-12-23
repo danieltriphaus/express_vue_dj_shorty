@@ -15,11 +15,12 @@
           <i class="bi bi-search" />
           <input 
             id="searchTracks"
-            v-model="searchQuery"
             v-debounce:300ms.lock.fireonempty="search"
             type="text"
             class="form-control"
             placeholder="Suche Songs auf Spotify"
+            :value="searchQuery"
+            @input="e => searchQuery = e.target.value"
             @focus="isFocused = true"
             @blur="blurSearchInput"
           >
@@ -64,7 +65,9 @@ const SEARCH_LIMIT = 5;
 
 export default {
     directives: {
-        debounce: getDirective(2)
+        debounce: getDirective(2, {
+          listenTo: 'input'
+        })
     },
     components: {
         SearchResults

@@ -19,8 +19,10 @@ const path = __dirname + "/views/";
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+// rate-limit 100 requests per 1 minute
 app.use(rateLimit({
-  windowMs: 15 * 60 * 1000,
+  windowMs: 1 * 60 * 1000,
   max: 100
 }));
 
