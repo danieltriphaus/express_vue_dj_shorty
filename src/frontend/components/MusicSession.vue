@@ -39,12 +39,12 @@
             disabled
             :value="shareLink"
           >
-          <span
+          <button
             class="input-group-text btn btn-outline-light"
-            @:click="shareMusicSessionLink"
+            @click="shareMusicSessionLink"
           >
             <i class="bi bi-share" />
-          </span>
+          </button>
         </div>
       </div>
     </div>
@@ -90,6 +90,7 @@ export default {
   },
   methods: {
     async shareMusicSessionLink() {
+      console.log("here");
       await navigator.share({ title: "DJ Shorty", url: this.shareLink });
     },
     async deactivateSession() {

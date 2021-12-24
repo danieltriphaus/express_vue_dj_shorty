@@ -145,7 +145,7 @@ export default {
             this.searchQuery = ""
             await this.search();
             this.blurSearchInput();
-          }, 1000)
+          }, 700)
         }
     }
 }
