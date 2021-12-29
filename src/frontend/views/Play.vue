@@ -42,7 +42,7 @@
       :is-loading="isLoading"
       :is-loading-more-songs="isLoadingMoreSongs"
       @load-more-songs="loadMoreSongs"
-      @touchstart.native="triggerBlurOnSearch"
+      @touchend.native="triggerBlurOnSearch"
       @track-added="trackAdded"
     />
     <div
