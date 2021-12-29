@@ -1,9 +1,5 @@
 <template>
   <div class="search-results g-0">
-    <spinner
-      :is-loading="isLoading"
-      class="mt-5"
-    />
     <div 
       v-for="track in searchResultTracks" 
       :key="track.id"

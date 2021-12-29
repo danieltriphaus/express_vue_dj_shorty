@@ -12,7 +12,11 @@
           Füge Songs zur Playlist hinzu
         </h4>
         <div class="d-flex align-items-center d-inline-block inner-addon right-addon">
-          <i class="bi bi-search" />
+          <i
+            v-show="!isLoading"
+            class="bi bi-search" 
+          />
+          <spinner :is-loading="isLoading" />
           <input 
             id="searchTracks"
             ref="searchTracks"
@@ -39,7 +43,6 @@
     <SearchResults
       v-show="isFocused" 
       :search-results="searchResults"
-      :is-loading="isLoading"
       :is-loading-more-songs="isLoadingMoreSongs"
       @load-more-songs="loadMoreSongs"
       @touchend.native="triggerBlurOnSearch"
@@ -63,6 +66,7 @@ import SearchResults from "../components/SearchResults";
 import { getDirective } from "vue-debounce";
 import { searchSpotify } from "../features/Tracks/searchSpotify";
 import axios from "axios";
+import Spinner from '../components/Spinner.vue';
 
 const SEARCH_LIMIT = 5;
 
@@ -73,7 +77,8 @@ export default {
         })
     },
     components: {
-        SearchResults
+        SearchResults,
+        Spinner
     },
     data() {
         return {
@@ -170,16 +175,20 @@ export default {
         position: relative; 
     }
 
-    .inner-addon .bi {
+    .inner-addon .bi, .inner-addon .spinner{
         position: absolute;
         padding: 25px;
         pointer-events: none;
     }
 
-    .right-addon .bi { 
+    .right-addon .bi, .inner-addon .spinner{ 
         right: 0px;
         color: var(--bs-body-bg);
         font-size: 1.8em;
+    }
+
+    .inner-addon .spinner {
+      font-size: 1.4rem;
     }
 
     .right-addon input { padding-right: 30px; }
