@@ -19,8 +19,13 @@ const searchSpotify = (routeParams, limit) => {
 
             return response.data;
         },
-        appendMoreTracks(originalResults, additionalResults) {
-            const appendedItems = originalResults.items.concat(additionalResults.tracks.items);
+        appendMoreSingleTypeResults(originalResults, additionalResults) {
+            if (additionalResults.tracks && additionalResults.albums) {
+                throw new Error("Only Items of One Type can be appended")
+            }
+
+            const typeOfNewResults = getTypeFromResults(additionalResults);
+            const appendedItems = originalResults.items.concat(additionalResults[typeOfNewResults].items);
 
             return {
                 ...originalResults,
@@ -28,6 +33,10 @@ const searchSpotify = (routeParams, limit) => {
                 total: appendedItems.length,
             };
         },
+    }
+
+    function getTypeFromResults(results) {
+        return results.tracks ? "tracks" : "albums";
     }
 };
 

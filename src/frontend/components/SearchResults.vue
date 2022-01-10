@@ -11,7 +11,7 @@
       />
     </div>
     <div
-      v-show="showMoreSongsButton"
+      v-show="showMoreItemsButton"
       class="result load-more-songs"
       @click="loadMoreSongs"
     >
@@ -26,6 +26,14 @@
         :album="album" 
       />
     </template>
+    <div
+      v-show="showMoreItemsButton"
+      class="result load-more-songs"
+      @click="loadMoreAlbums"
+    >
+      <spinner :is-loading="isLoadingMoreAlbums" />
+      <span v-if="!isLoadingMoreAlbums"> Mehr Alben </span>
+    </div>
   </div>
 </template>
 
@@ -53,6 +61,12 @@ export default {
         return false;
       }
     },
+    isLoadingMoreAlbums: {
+      type: Boolean,
+      default() {
+        return false;
+      }
+    },
     searchResults: {
       type: Object,
       default() {
@@ -63,6 +77,7 @@ export default {
   data() {
       return {
         numberOfSongLoads: 0,
+        numberOfAlbumLoads: 0,
       };
   },
   computed: {
@@ -72,7 +87,7 @@ export default {
     searchResultAlbums() {
       return this.searchResults.albums ? this.searchResults.albums.items : {}
     },
-    showMoreSongsButton() {
+    showMoreItemsButton() {
       return this.searchResults.tracks || this.searchResults.albums;
     }
   },
@@ -80,6 +95,10 @@ export default {
     async loadMoreSongs() {
       this.numberOfSongLoads++;
       this.$emit("load-more-songs", this.numberOfSongLoads)
+    },
+    async loadMoreAlbums() {
+      this.numberOfAlbumLoads++;
+      this.$emit("load-more-albums", this.numberOfAlbumLoads)
     }
   }
 }

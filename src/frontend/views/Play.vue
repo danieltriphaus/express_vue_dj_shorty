@@ -44,7 +44,9 @@
       v-show="isFocused" 
       :search-results="searchResults"
       :is-loading-more-songs="isLoadingMoreSongs"
+      :is-loading-more-albums="isLoadingMoreAlbums"
       @load-more-songs="loadMoreSongs"
+      @load-more-albums="loadMoreAlbums"
       @touchend.native="triggerBlurOnSearch"
       @track-added="trackAdded"
     />
@@ -64,7 +66,7 @@
 <script>
 import SearchResults from "../components/SearchResults";
 import { getDirective } from "vue-debounce";
-import { searchSpotify } from "../features/Tracks/searchSpotify";
+import { searchSpotify } from "../features/SearchSpotify/searchSpotify";
 import axios from "axios";
 import Spinner from '../components/Spinner.vue';
 
@@ -86,6 +88,7 @@ export default {
             isFocused: false,
             isLoading: false,
             isLoadingMoreSongs: false,
+            isLoadingMoreAlbums: false,
             searchQuery: "",
             searchResults: {},
             searchHandler: undefined,
@@ -141,9 +144,18 @@ export default {
             
             const sh = this.getSearchHandler();
             const additionalResults = await sh.searchSpotify(this.searchQuery, SEARCH_LIMIT * numberOfSongLoads, "track");
-            this.searchResults.tracks = sh.appendMoreTracks(JSON.parse(JSON.stringify(this.searchResults.tracks)), additionalResults);
+            this.searchResults.tracks = sh.appendMoreSingleTypeResults(JSON.parse(JSON.stringify(this.searchResults.tracks)), additionalResults);
 
             this.isLoadingMoreSongs = false;
+        },
+        async loadMoreAlbums(numberOfAlbumLoads) {
+            this.isLoadingMoreAlbums = true;
+            
+            const sh = this.getSearchHandler();
+            const additionalResults = await sh.searchSpotify(this.searchQuery, SEARCH_LIMIT * numberOfAlbumLoads, "album");
+            this.searchResults.albums = sh.appendMoreSingleTypeResults(JSON.parse(JSON.stringify(this.searchResults.albums)), additionalResults);
+
+            this.isLoadingMoreAlbums = false;
         },
         trackAdded() {
           setTimeout(async () => {
