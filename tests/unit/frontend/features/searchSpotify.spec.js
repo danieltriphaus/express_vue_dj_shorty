@@ -1,4 +1,4 @@
-import { searchSpotify } from "@/frontend/features/Tracks/searchSpotify";
+import { searchSpotify } from "@/frontend/features/SearchSpotify/searchSpotify";
 import axios from "axios";
 
 jest.mock("axios");
