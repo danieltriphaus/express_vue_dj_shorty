@@ -9,6 +9,7 @@
   "scripts": {
     "serve": "vue-cli-service serve src/frontend/main.js",
     "build": "vue-cli-service build src/frontend/main.js --dest build",
+    "build-report": "vue-cli-service build src/frontend/main.js --dest build --report",
     "test:unit": "vue-cli-service test:unit --runInBand",
     "lint": "vue-cli-service lint",
     "startServer": "nodemon src/api/app.js localhost",
@@ -52,7 +53,8 @@
     "eslint-plugin-vue": "^6.2.2",
     "nodemon": "^2.0.14",
     "supertest": "6.1.6",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "webpack-bundle-analyzer": "^4.5.0"
   },
   "_id": "express_vue_dj_shorty@1.0.0",
   "bugs": {

@@ -6,7 +6,7 @@ import Toasted from "vue-toasted";
 
 import { spotifyAccessToken } from "./plugins/spotifyAccessToken";
 
-import "bootstrap";
+import "bootstrap/js/dist/button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./assets/css/global.css";

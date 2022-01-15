@@ -1,10 +1,10 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Index from "../views/Index.vue";
-import Authorize from "../views/Authorize.vue";
-import Host from "../views/Host";
-import NewMusicSession from "../views/NewMusicSession";
-import Play from "../views/Play";
+const Index = () => import("../views/Index.vue");
+const Authorize = () => import("../views/Authorize.vue");
+const Host = () => import("../views/Host");
+const NewMusicSession = () => import("../views/NewMusicSession");
+const Play = () => import("../views/Play");
 
 Vue.use(VueRouter);
 

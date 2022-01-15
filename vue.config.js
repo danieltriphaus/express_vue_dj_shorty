@@ -1,6 +1,7 @@
 require("dotenv").config();
 const path = require("path");
 const fs = require("fs");
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 let devServer = {};
 if (process.env.NODE_ENV === "development") {
@@ -30,7 +31,10 @@ module.exports = {
     },
     watchOptions: {
       poll: 1000,
-    }
+    },
+    // plugins: [ new BundleAnalyzerPlugin({
+    //   analyzerHost: "172.24.64.125"
+    // }) ]
   },
   devServer
 };
