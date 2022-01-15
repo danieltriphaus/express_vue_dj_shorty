@@ -5,13 +5,12 @@ function AddTrackDelayError(...args) {
 }
 AddTrackDelayError.prototype = Object.create(Error.prototype, {
     constructor: {
-      value: Error,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    }
+        value: Error,
+        enumerable: false,
+        writable: true,
+        configurable: true,
+    },
 });
 Reflect.setPrototypeOf(AddTrackDelayError, Error);
-  
+
 module.exports = { AddTrackDelayError };
-  

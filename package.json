@@ -1,70 +1,70 @@
 {
-  "name": "express_vue_dj_shorty",
-  "version": "1.0.0",
-  "private": true,
-  "author": {
-    "name": "danieltriphaus",
-    "email": "d.triphaus@outlook.de"
-  },
-  "scripts": {
-    "serve": "vue-cli-service serve src/frontend/main.js",
-    "build": "vue-cli-service build src/frontend/main.js --dest build",
-    "build-report": "vue-cli-service build src/frontend/main.js --dest build --report",
-    "test:unit": "vue-cli-service test:unit --runInBand",
-    "lint": "vue-cli-service lint",
-    "startServer": "nodemon src/api/app.js localhost",
-    "start": "node src/api/app.js"
-  },
-  "main": "src/frontend/main.js",
-  "dependencies": {
-    "@google-cloud/datastore": "6.6.0",
-    "@google-cloud/logging-bunyan": "^3.2.0",
-    "@popperjs/core": "2.10.2",
-    "@vue/cli": "^4.5.15",
-    "axios": "0.23.0",
-    "bootstrap": "5.1.3",
-    "bootstrap-icons": "1.7.0",
-    "bunyan": "^1.8.15",
-    "connect-history-api-fallback": "^1.6.0",
-    "cookie-parser": "1.4.5",
-    "core-js": "^3.6.5",
-    "dotenv": "^10.0.0",
-    "express-rate-limit": "^5.5.1",
-    "find-config": "^1.0.0",
-    "global": "^4.4.0",
-    "nanoid": "ai/nanoid",
-    "touch-cli": "^0.0.1",
-    "uuid": "8.3.2",
-    "vue": "^2.6.11",
-    "vue-cookie": "1.1.4",
-    "vue-debounce": "^3.0.1",
-    "vue-router": "^3.2.0",
-    "vue-toasted": "^1.1.28"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-unit-jest": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "@vue/test-utils": "^1.0.3",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "nodemon": "^2.0.14",
-    "supertest": "6.1.6",
-    "vue-template-compiler": "^2.6.11",
-    "webpack-bundle-analyzer": "^4.5.0"
-  },
-  "_id": "express_vue_dj_shorty@1.0.0",
-  "bugs": {
-    "url": "https://github.com/danieltriphaus/express_vue_dj_shorty/issues"
-  },
-  "homepage": "https://github.com/danieltriphaus/express_vue_dj_shorty#readme",
-  "license": "MIT",
-  "readme": "ERROR: No README data found!",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/danieltriphaus/express_vue_dj_shorty.git"
-  }
+    "name": "express_vue_dj_shorty",
+    "version": "1.0.0",
+    "private": true,
+    "author": {
+        "name": "danieltriphaus",
+        "email": "d.triphaus@outlook.de"
+    },
+    "scripts": {
+        "serve": "vue-cli-service serve src/frontend/main.js",
+        "build": "vue-cli-service build src/frontend/main.js --dest build",
+        "build-report": "vue-cli-service build src/frontend/main.js --dest build --report",
+        "test:unit": "vue-cli-service test:unit --runInBand",
+        "lint": "vue-cli-service lint",
+        "startServer": "nodemon src/api/app.js localhost",
+        "start": "node src/api/app.js"
+    },
+    "main": "src/frontend/main.js",
+    "dependencies": {
+        "@google-cloud/datastore": "6.6.0",
+        "@google-cloud/logging-bunyan": "^3.2.0",
+        "@popperjs/core": "2.10.2",
+        "@vue/cli": "^4.5.15",
+        "axios": "0.23.0",
+        "bootstrap": "5.1.3",
+        "bootstrap-icons": "1.7.0",
+        "bunyan": "^1.8.15",
+        "connect-history-api-fallback": "^1.6.0",
+        "cookie-parser": "1.4.5",
+        "core-js": "^3.6.5",
+        "dotenv": "^10.0.0",
+        "express-rate-limit": "^5.5.1",
+        "find-config": "^1.0.0",
+        "global": "^4.4.0",
+        "nanoid": "ai/nanoid",
+        "touch-cli": "^0.0.1",
+        "uuid": "8.3.2",
+        "vue": "^2.6.11",
+        "vue-cookie": "1.1.4",
+        "vue-debounce": "^3.0.1",
+        "vue-router": "^3.2.0",
+        "vue-toasted": "^1.1.28"
+    },
+    "devDependencies": {
+        "@vue/cli-plugin-babel": "~4.5.0",
+        "@vue/cli-plugin-eslint": "~4.5.0",
+        "@vue/cli-plugin-router": "~4.5.0",
+        "@vue/cli-plugin-unit-jest": "~4.5.0",
+        "@vue/cli-service": "~4.5.0",
+        "@vue/test-utils": "^1.0.3",
+        "babel-eslint": "^10.1.0",
+        "eslint": "^6.7.2",
+        "eslint-plugin-vue": "^6.2.2",
+        "nodemon": "^2.0.14",
+        "supertest": "6.1.6",
+        "vue-template-compiler": "^2.6.11",
+        "webpack-bundle-analyzer": "^4.5.0"
+    },
+    "_id": "express_vue_dj_shorty@1.0.0",
+    "bugs": {
+        "url": "https://github.com/danieltriphaus/express_vue_dj_shorty/issues"
+    },
+    "homepage": "https://github.com/danieltriphaus/express_vue_dj_shorty#readme",
+    "license": "MIT",
+    "readme": "ERROR: No README data found!",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/danieltriphaus/express_vue_dj_shorty.git"
+    }
 }

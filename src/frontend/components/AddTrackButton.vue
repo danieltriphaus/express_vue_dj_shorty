@@ -1,18 +1,18 @@
 <template>
-  <div
-    class="add-button" 
-    @click="addTrack"
-  >
-    <i
-      v-if="wasSuccessful"
-      class="bi bi-check-lg"
-    />
-    <spinner :is-loading="isLoading" />
-    <i
-      v-if="!isLoading && !wasSuccessful"
-      class="bi bi-plus-circle" 
-    />
-  </div>
+    <div
+        class="add-button" 
+        @click="addTrack"
+    >
+        <i
+            v-if="wasSuccessful"
+            class="bi bi-check-lg"
+        />
+        <spinner :is-loading="isLoading" />
+        <i
+            v-if="!isLoading && !wasSuccessful"
+            class="bi bi-plus-circle" 
+        />
+    </div>
 </template>
 
 <script>
