@@ -68,7 +68,7 @@ router.all("/*", async function(req, res, next) {
         next();
     } catch(error) {
         if (error instanceof EntityNotFoundError) {
-            console.error(error);
+            req.bunyan.error(error);
             res.status(404).json(error.message);
         } else if (error instanceof DecryptionError) {
             res.status(400).json(error.message);
@@ -93,10 +93,10 @@ router.get("/search", async function (req, res) {
         res.status(200).json(results);
     } catch (error) {
         if (error instanceof ExternalRequestError) {
-            console.error(error);
+            req.bunyan.error(error);
             res.status(400).json("external request failed");
         } else if (error instanceof EntityNotFoundError) {
-            console.error(error);
+            req.bunyan.error(error);
             res.status(404).json(error.message);
         } else if (error instanceof MissingParamError) {
             res.status(200).json({});

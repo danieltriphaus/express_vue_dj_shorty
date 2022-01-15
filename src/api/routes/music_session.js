@@ -21,7 +21,7 @@ router.all("/", async (req, res, next) => {
     }
     next();
   } catch(error) {
-    handleErrors(error, res);
+    handleErrors(error, req, res);
   }
 });
 
@@ -35,17 +35,16 @@ router.post("/", async (req, res) => {
 
     res.status(200).json(musicSession);
   } catch (error) {
-    handleErrors(error, res);
+    handleErrors(error, req, res);
   }
 });
 
 router.get("/", async (req, res) => {
   try {
     const musicSessions = await getMusicSessions(req.params.spotifyUserId);
-
     res.status(200).json(musicSessions);
   } catch (error) {
-    handleErrors(error, res);
+    handleErrors(error, req, res);
   }
 
   res.end();
@@ -57,7 +56,7 @@ router.get("/:musicSessionId", async function(req, res) {
 
   res.status(200).json(musicSession);
   } catch (error) {
-    handleErrors(error, res);
+    handleErrors(error, req, res);
   }
 });
 
@@ -70,13 +69,13 @@ router.patch("/:musicSessionId", async (req, res) => {
     );
     res.status(200).json({musicSession: changedMusicSession});
   } catch(error) {
-    handleErrors(error, res);
+    handleErrors(error, req, res);
   }
 });
 
 module.exports = router;
 
-function handleErrors(error, res) {
+function handleErrors(error, req, res) {
   if (error instanceof InvalidTokenError) {
     res.status(403).json(error.message);
   } else if (error instanceof MissingParamError) {
@@ -86,10 +85,10 @@ function handleErrors(error, res) {
   } else if (error instanceof EntityNotFoundError) {
     res.status(404).json(error.message)
   } else if (error instanceof ExternalRequestError) {
-    console.log(error);
+    req.log.error(error);
     res.status(error.response.status).json(error.message);
   } else {
-    console.log(error);
+    req.log.error(error);
     throw error;
   }
 

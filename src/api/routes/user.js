@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
 
     res.status(200).end();
   } catch(error) {
-    console.error(error);
+    req.log.error(error);
     res.status(500).json(error.message);
   }
 });

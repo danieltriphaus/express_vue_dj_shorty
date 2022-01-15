@@ -45,7 +45,7 @@ router.post("/", async function (req, res) {
         res.status(200).json(accessToken);
     } catch(error) {
         if (error instanceof ExternalRequestError) {
-            console.error(error.response);
+            req.log.error(error);
             res.status(400).json("external request failed");
         }
     }
@@ -68,7 +68,7 @@ router.get("/", async function (req, res) {
     if (error instanceof InvalidTokenError || error instanceof NotAuthorizedError) {
       res.status(401).json(error.message);
     } else {
-      console.error(error);
+      req.log.error(error);
       res.status(500).json(error.message);
       res.end();
     }

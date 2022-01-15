@@ -9,8 +9,23 @@ var userRouter = require("./routes/user");
 var musicSessionRouter = require("./routes/music_session");
 var guestRouter = require("./routes/guest");
 var SpotifyErrorHandler = require("./middleware/SpotifyErrorHandler");
+const bunyan = require("bunyan");
+const {LoggingBunyan} = require("@google-cloud/logging-bunyan");
+const gcloudLogger = new LoggingBunyan();
+
+const logger = bunyan.createLogger({
+  name: "default",
+  streams: [
+    process.env.NODE_ENV === "production" ? gcloudLogger.stream('info') : { stream: process.stdout, level: 'info' },
+  ]
+});
 
 var app = express();
+
+app.use((req, res, next) => {
+  req.log = logger;
+  next();
+});
 
 const path = __dirname + "/views/";
 
@@ -32,9 +47,7 @@ musicSessionRouter.use("/:musicSessionId/guest", guestRouter);
 app.use("/api/user", userRouter);
 
 
-app.use(history({
-  verbose: true
-}));
+app.use(history());
 app.use(express.static(path, { etag: false, lastModified: false }));
 
 /*
