@@ -4,14 +4,13 @@ const guestAccessDatastoreHandler = (datastore) => {
     return {
         dataProvider: datastore,
 
-        //ToDo: change the return of not found entity
         async getGuestAccess(spotifyAccessToken) {
             const key = this.dataProvider.key(["guest_access", spotifyAccessToken]);
 
             const [guestAccess] = await this.dataProvider.get(key);
             if (guestAccess) {
                 delete guestAccess[Datastore.KEY];
-            }    
+            }
             return guestAccess;
         },
 
@@ -21,15 +20,15 @@ const guestAccessDatastoreHandler = (datastore) => {
             const data = {
                 ipAddress: params.spotifyAccessToken,
                 musicSessionId: params.musicSessionId,
-                trackLastAdded: params.trackLastAdded
+                trackLastAdded: params.trackLastAdded,
             };
 
             await this.dataProvider.upsert({
                 key,
-                data
+                data,
             });
-        }
-    }
+        },
+    };
 };
 
 module.exports = { guestAccessDatastoreHandler };

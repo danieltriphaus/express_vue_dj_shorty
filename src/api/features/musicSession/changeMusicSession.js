@@ -1,29 +1,32 @@
 const { datastoreHandler } = require("../../datastore/datastoreHandler");
 const { ChangeReadOnlyError } = require("../../errors/ChangeReadOnlyError");
+const { EntityNotFoundError } = require("../../errors/EntityNotFoundError");
 const { MissingParamError } = require("../../errors/MissingParamError");
 
-const changeMusicSession = async (spotifyUserId, musicSessionId, changeData) => {  
-    const readOnlyFields = [
-        "id", "refreshToken", "createdAt"
-    ];
-    
-    return await ( async () => {
+const changeMusicSession = async (spotifyUserId, musicSessionId, changeData) => {
+    const readOnlyFields = ["id", "refreshToken", "createdAt"];
+
+    return await (async () => {
         if (hasDataToChange()) {
-            throw new MissingParamError("No Data for Change")
+            throw new MissingParamError("No Data for Change");
         }
-    
+
         if (hasChangesToReadOnlyFields()) {
             throw new ChangeReadOnlyError("Attempting to change read only field");
         }
-    
+
         const dh = datastoreHandler();
         const musicSession = await dh.getMusicSession(spotifyUserId, musicSessionId);
-    
+
+        if (!musicSession) {
+            throw new EntityNotFoundError("musicSession not found");
+        }
+
         const changedMusicSession = Object.assign(musicSession, changeData);
-        
-        await dh.updateMusicSession(spotifyUserId, changedMusicSession)
-    
-        const { refreshToken, ...changedMusicSessionResult } = changedMusicSession
+
+        await dh.updateMusicSession(spotifyUserId, changedMusicSession);
+
+        const { refreshToken, ...changedMusicSessionResult } = changedMusicSession;
         return changedMusicSessionResult;
     })();
 

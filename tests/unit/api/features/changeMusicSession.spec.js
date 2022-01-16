@@ -2,6 +2,7 @@ import { changeMusicSession } from "@/api/features/musicSession/changeMusicSessi
 import { MissingParamError } from "@/api/errors/MissingParamError";
 import { datastoreHandler } from "@/api/datastore/datastoreHandler";
 import { ChangeReadOnlyError } from "@/api/errors/ChangeReadOnlyError";
+import { EntityNotFoundError } from "@/api/errors/EntityNotFoundError";
 
 jest.mock("@/api/datastore/datastoreHandler");
 
@@ -16,8 +17,10 @@ describe("Change Music Session tests", () => {
 
     function mockDatastoreHandlerFunctions() {
         datastoreHandler.mockReturnValueOnce({
-            getMusicSession: jest.fn(() => {return fakeMusicSession}),
-            updateMusicSession: jest.fn()
+            getMusicSession: jest.fn(() => {
+                return fakeMusicSession;
+            }),
+            updateMusicSession: jest.fn(),
         });
     }
 
@@ -26,7 +29,7 @@ describe("Change Music Session tests", () => {
         expect(changeMusicSession("testUser", "musicSessionId")).rejects.toThrow(MissingParamError);
     });
 
-    it("should merge data for change with existing data and remove refreshToken from result", async() => {
+    it("should merge data for change with existing data and remove refreshToken from result", async () => {
         mockDatastoreHandlerFunctions();
 
         const changeData = {
@@ -34,13 +37,13 @@ describe("Change Music Session tests", () => {
             status: "inactive",
         };
 
-        const newMusicSession = await changeMusicSession("testUser", fakeMusicSession.id, changeData)
+        const newMusicSession = await changeMusicSession("testUser", fakeMusicSession.id, changeData);
 
         expect(newMusicSession).toMatchObject({
             id: fakeMusicSession.id,
             createdAt: fakeMusicSession.createdAt,
             spotifyPlaylistId: changeData.spotifyPlaylistId,
-            status: changeData.status
+            status: changeData.status,
         });
     });
 
@@ -48,24 +51,41 @@ describe("Change Music Session tests", () => {
         const changeDataTests = [
             { id: "newId" },
             { createdAt: new Date("1995-12-17T03:24:00").getTime() },
-            { refreshToken: "newRefreshToken"}
+            { refreshToken: "newRefreshToken" },
         ];
 
         mockDatastoreHandlerFunctions();
-        expect(changeMusicSession("testUser", fakeMusicSession.id, changeDataTests[0])).rejects.toThrowError(ChangeReadOnlyError)
-        
-        mockDatastoreHandlerFunctions();
-        expect(changeMusicSession("testUser", fakeMusicSession.id, changeDataTests[1])).rejects.toThrowError(ChangeReadOnlyError)
+        expect(changeMusicSession("testUser", fakeMusicSession.id, changeDataTests[0])).rejects.toThrowError(
+            ChangeReadOnlyError
+        );
 
         mockDatastoreHandlerFunctions();
-        expect(changeMusicSession("testUser", fakeMusicSession.id, changeDataTests[2])).rejects.toThrowError(ChangeReadOnlyError)
+        expect(changeMusicSession("testUser", fakeMusicSession.id, changeDataTests[1])).rejects.toThrowError(
+            ChangeReadOnlyError
+        );
+
+        mockDatastoreHandlerFunctions();
+        expect(changeMusicSession("testUser", fakeMusicSession.id, changeDataTests[2])).rejects.toThrowError(
+            ChangeReadOnlyError
+        );
     });
 
     it("should not convert createdAt", async () => {
         mockDatastoreHandlerFunctions();
 
-        const updatedMusicSession = await changeMusicSession("testUser", fakeMusicSession.id, {status: "active"});
+        const updatedMusicSession = await changeMusicSession("testUser", fakeMusicSession.id, { status: "active" });
 
         expect(updatedMusicSession.createdAt).toEqual(fakeMusicSession.createdAt);
+    });
+
+    it("should throw EntityNotFoundError when musicSession is not returned from datastore", async () => {
+        datastoreHandler.mockReset();
+        datastoreHandler.mockReturnValueOnce({
+            getMusicSession: jest.fn().mockResolvedValue(),
+        });
+
+        expect(changeMusicSession("testUser", "non_existent_id", { status: "active" })).rejects.toThrowError(
+            EntityNotFoundError
+        );
     });
 });
