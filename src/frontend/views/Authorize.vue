@@ -1,5 +1,5 @@
 <template>
-  <div />
+    <div />
 </template>
 
 <script>
@@ -14,6 +14,7 @@ export default {
       spotifyAuthorizeController(
         process.env.BASE_URL,
         this.$route.query.code,
+        this.$route.query.state,
         process.env.VUE_APP_APIURL,
         this.$cookie,
         this.$router

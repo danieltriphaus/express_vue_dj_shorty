@@ -50,7 +50,6 @@ router.get("/", async (req, res) => {
     } catch (error) {
         handleErrors(error, req, res);
     }
-    console.log(req.cookies);
     res.end();
 });
 

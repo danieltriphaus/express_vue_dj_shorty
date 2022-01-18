@@ -1,54 +1,54 @@
 <template>
-  <div class="list-group-item">
-    <div class="col music-session">
-      <div class="row">
-        <div class="col">
-          {{ createdAt }}
+    <div class="list-group-item">
+        <div class="col music-session">
+            <div class="row">
+                <div class="col">
+                    {{ createdAt }}
+                </div>
+                <div class="col">
+                    <template v-if="musicSession.status === 'active'">
+                        <span class="session-status status-active" />
+                        Aktiv
+                    </template>
+                    <template v-else>
+                        <span class="session-status status-inactive" />
+                        Inaktiv
+                    </template>
+                </div>
+                <div class="col">
+                    <router-link
+                        :to="playLink"
+                        class="btn btn-outline-primary"
+                    >
+                        Beitreten
+                    </router-link>
+                    <button
+                        type="button"
+                        class="btn btn-outline-danger"
+                        @click="deactivateSession"
+                    >
+                        <i class="bi bi-trash" />
+                    </button>
+                </div>
+            </div>
+            <div class="row music-session-link">
+                <div class="col input-group">
+                    <input
+                        type="text"
+                        class="form-control"
+                        disabled
+                        :value="shareLink"
+                    >
+                    <button
+                        class="input-group-text btn btn-outline-light"
+                        @click="shareMusicSessionLink"
+                    >
+                        <i class="bi bi-share" />
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="col">
-          <template v-if="musicSession.status === 'active'">
-            <span class="session-status status-active" />
-            Aktiv
-          </template>
-          <template v-else>
-            <span class="session-status status-inactive" />
-            Inaktiv
-          </template>
-        </div>
-        <div class="col">
-          <router-link
-            :to="playLink"
-            class="btn btn-outline-primary"
-          >
-            Beitreten
-          </router-link>
-          <button
-            type="button"
-            class="btn btn-outline-danger"
-            @click="deactivateSession"
-          >
-            <i class="bi bi-trash" />
-          </button>
-        </div>
-      </div>
-      <div class="row music-session-link">
-        <div class="col input-group">
-          <input
-            type="text"
-            class="form-control"
-            disabled
-            :value="shareLink"
-          >
-          <button
-            class="input-group-text btn btn-outline-light"
-            @click="shareMusicSessionLink"
-          >
-            <i class="bi bi-share" />
-          </button>
-        </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -90,7 +90,6 @@ export default {
   },
   methods: {
     async shareMusicSessionLink() {
-      console.log("here");
       await navigator.share({ title: "DJ Shorty", url: this.shareLink });
     },
     async deactivateSession() {
