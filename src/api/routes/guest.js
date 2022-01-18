@@ -1,7 +1,4 @@
 const express = require("express");
-const { datastoreHandler } = require("../datastore/datastoreHandler");
-const { decryptGuestAccessToken } = require("../features/guestAccessToken/decryptGuestAccessToken");
-const { getGuestAccessToken } = require("../features/guestAccessToken/getGuestAccessToken");
 const { enforceAddTrackDelay } = require("../features/addTrackDelay/enforceAddTrackDelay");
 const { AddTrackDelayError } = require("../errors/AddTrackDelayError");
 const { ExternalRequestError } = require("../errors/ExternalRequestError");
@@ -11,60 +8,15 @@ const { MissingParamError } = require("../errors/MissingParamError");
 const { getAlbumTracks } = require("../features/album/getAlbumTracks");
 const { addTrack } = require("../features/track/addTrack");
 const { DecryptionError } = require("../errors/DecryptionError");
-const { AccessTokenRefresher } = require("../controllers/AccessTokenRefresher");
-const spotifyConfig = require("../../config/spotify.config");
 const { InvalidTokenError } = require("../errors/InvalidTokenError");
 const { NotAuthorizedError } = require("../errors/NotAuthorizedError");
+const { authenticateGuest } = require("../middleware/authenticateGuest");
 
 const router = express.Router({ mergeParams: true });
 
-//TODO: Refactor Guest Authentication
 router.all("/*", async function (req, res, next) {
     try {
-        let guestSpotifyAccessToken;
-        const dh = datastoreHandler();
-        const musicSession = await dh.getMusicSession(req.params.spotifyUserId, req.params.musicSessionId);
-
-        if (req.cookies.spotify_access_token) {
-            guestSpotifyAccessToken = req.cookies.spotify_access_token;
-        } else {
-            const spotifyAccessTokenCookie = await getGuestAccessToken(
-                musicSession.refreshToken,
-                musicSession.encryptionKey
-            );
-
-            res.setHeader(
-                "Set-Cookie",
-                "spotify_access_token=" +
-                    spotifyAccessTokenCookie.value +
-                    "; Max-Age=" +
-                    spotifyAccessTokenCookie.expiresIn +
-                    "; Path=/; Secure; HttpOnly;"
-            );
-
-            guestSpotifyAccessToken = spotifyAccessTokenCookie.value;
-        }
-
-        let spotifyAccessToken;
-        if (isHost(req)) {
-            if (req.cookies.spotify_access_token) {
-                spotifyAccessToken = req.cookies.spotify_access_token;
-            } else {
-                const refresher = AccessTokenRefresher(req.cookies.spotify_refresh_token, spotifyConfig);
-                const accessToken = await refresher.getRefreshedAccessToken();
-
-                res.setHeader(
-                    "Set-Cookie",
-                    "spotify_access_token=" + accessToken.value + "; Max-Age=" + accessToken.expiresIn + "; Path=/"
-                );
-
-                spotifyAccessToken = accessToken.value;
-            }
-        } else {
-            spotifyAccessToken = decryptGuestAccessToken(guestSpotifyAccessToken, musicSession.encryptionKey);
-        }
-
-        req.djShorty = { spotifyAccessToken, musicSession };
+        await authenticateGuest(req, res);
 
         next();
     } catch (error) {
@@ -155,7 +107,3 @@ router.get("/album/:albumId/track", async function (req, res) {
 });
 
 module.exports = router;
-
-function isHost(req) {
-    return req.cookies.spotify_refresh_token;
-}
