@@ -1,5 +1,4 @@
 const { musicSessionResultFormatter } = require("./musicSessionResultFormatter");
-const { EntityNotFoundError } = require("../errors/EntityNotFoundError");
 
 const musicSessionDatastoreHandler = (datastore) => {
     return {
@@ -10,8 +9,9 @@ const musicSessionDatastoreHandler = (datastore) => {
 
             const query = datastore
                 .createQuery("music_session")
-                .select(["createdAt", "spotifyPlaylistId", "status", "waitTime"])
-                .hasAncestor(ancestorKey);
+                .select(["createdAt", "spotifyPlaylistId", "status", "waitTime", "playlistName"])
+                .hasAncestor(ancestorKey)
+                .order("createdAt", { descending: true });
 
             const [result] = await this.dataProvider.runQuery(query);
 
@@ -32,6 +32,7 @@ const musicSessionDatastoreHandler = (datastore) => {
                 refreshToken: params.spotifyRefreshToken,
                 status: "active",
                 encryptionKey: params.encryptionKey,
+                playlistName: params.playlistName,
             };
 
             await this.dataProvider.insert({

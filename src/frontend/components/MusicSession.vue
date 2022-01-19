@@ -2,10 +2,11 @@
     <div class="list-group-item">
         <div class="col music-session">
             <div class="row">
-                <div class="col">
+                <div class="col-8">
+                    <b>{{ musicSession.playlistName }}</b><br>
                     {{ createdAt }}
                 </div>
-                <div class="col">
+                <div class="col-4">
                     <template v-if="musicSession.status === 'active'">
                         <span class="session-status status-active" />
                         Aktiv
@@ -14,21 +15,6 @@
                         <span class="session-status status-inactive" />
                         Inaktiv
                     </template>
-                </div>
-                <div class="col">
-                    <router-link
-                        :to="playLink"
-                        class="btn btn-outline-primary"
-                    >
-                        Beitreten
-                    </router-link>
-                    <button
-                        type="button"
-                        class="btn btn-outline-danger"
-                        @click="deactivateSession"
-                    >
-                        <i class="bi bi-trash" />
-                    </button>
                 </div>
             </div>
             <div class="row music-session-link">
@@ -44,6 +30,23 @@
                         @click="shareMusicSessionLink"
                     >
                         <i class="bi bi-share" />
+                    </button>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm">
+                    <router-link
+                        :to="playLink"
+                        class="btn btn-outline-primary"
+                    >
+                        Beitreten
+                    </router-link>
+                    <button
+                        type="button"
+                        class="btn btn-outline-danger"
+                        @click="deactivateSession"
+                    >
+                        <i class="bi bi-trash" />
                     </button>
                 </div>
             </div>

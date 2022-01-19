@@ -1,21 +1,24 @@
 <template>
-  <div class="row">
-    <input
-      type="radio"
-      name="playlist"
-      v-bind:id="playlist.id"
-      autocomplete="off"
-      class="btn-check"
-      v-bind:value="value"
-      v-on:change="$emit('change', $event.target.value)"
-    />
-    <label class="btn btn-outline-secondary" v-bind:for="playlist.id">
-      <div class="d-flex w-100 justify-content-between">
-        <h6>{{ playlist.name }}</h6>
-        <div class="text-end">Tracks: {{ playlist.tracks.total }}</div>
-      </div>
-    </label>
-  </div>
+    <div class="row">
+        <input
+            :id="playlist.id"
+            type="radio"
+            name="playlist"
+            autocomplete="off"
+            class="btn-check"
+            :value="value"
+            @change="$emit('change', { spotifyPlaylistId: $event.target.value, playlistName: playlist.name })"
+        >
+        <label
+            class="btn btn-outline-secondary"
+            :for="playlist.id"
+        >
+            <div class="d-flex w-100 justify-content-between">
+                <h6>{{ playlist.name }}</h6>
+                <div class="text-end">Tracks: {{ playlist.tracks.total }}</div>
+            </div>
+        </label>
+    </div>
 </template>
 
 <script>
@@ -25,9 +28,20 @@ export default {
     event: "change",
   },
   props: {
-    playlist: Object,
-    modelValue: { default: "" },
-    value: { type: String, default: undefined },
+    playlist: {
+      type: Object,
+      default() {
+        return {};
+      }
+    },
+    modelValue: { 
+      type: String,
+      default: "" 
+    },
+    value: { 
+      type: String,
+      default: undefined 
+    },
   },
 };
 </script>

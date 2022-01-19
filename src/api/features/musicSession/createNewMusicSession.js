@@ -5,51 +5,56 @@ const { MissingParamError } = require("../../errors/MissingParamError");
 const crypto = require("crypto");
 
 const createNewMusicSession = async (params) => {
-  let newMusicSession = {};
+    let newMusicSession = {};
 
-  return await (async () => {
-    if (isSpotifyPlaylistIdMissing()) {
-      throw new MissingParamError("Missing Param: 'spotifyPlaylistId'");
+    return await (async () => {
+        if (isSpotifyPlaylistIdMissing()) {
+            throw new MissingParamError("Missing Param: 'spotifyPlaylistId'");
+        }
+
+        if (isSpotifyRefreshTokenInvalid()) {
+            throw new InvalidTokenError("Invalid Refresh Token");
+        }
+
+        params.id = generateMusicSessionId();
+        params.encryptionKey = generateEncryptionKey();
+
+        const dh = datastoreHandler();
+        newMusicSession = await dh.createNewMusicSession(params);
+
+        return {
+            musicSession: {
+                id: params.id,
+                ...getPublicMusicSession(newMusicSession),
+            },
+        };
+    })();
+
+    function isSpotifyPlaylistIdMissing() {
+        return (
+            !params.spotifyPlaylistId ||
+            !Object.prototype.hasOwnProperty.call(params, "spotifyPlaylistId") ||
+            params.spotifyPlaylistId.length === 0
+        );
     }
 
-    if (isSpotifyRefreshTokenInvalid()) {
-      throw new InvalidTokenError("Invalid Refresh Token");
+    function isSpotifyRefreshTokenInvalid() {
+        return !params.spotifyRefreshToken || params.spotifyRefreshToken.length === 0;
     }
 
-    params.id = generateMusicSessionId();
-    params.encryptionKey = generateEncryptionKey();
-    
-    const dh = datastoreHandler();
-    newMusicSession = await dh.createNewMusicSession(params);
+    function generateMusicSessionId() {
+        return nanoid(21);
+    }
 
-    return {
-      musicSession: {
-        id: params.id,
-        ...getPublicMusicSession(newMusicSession)
-      }
-    };
-  })();
+    function generateEncryptionKey() {
+        return crypto.generateKeySync("aes", { length: 128 }).export().toString("base64");
+    }
 
-  function isSpotifyPlaylistIdMissing() {
-    return !params.spotifyPlaylistId || !params.hasOwnProperty("spotifyPlaylistId") || params.spotifyPlaylistId.length === 0;
-  }
-
-  function isSpotifyRefreshTokenInvalid() {
-    return !params.spotifyRefreshToken || params.spotifyRefreshToken.length === 0;
-  }
-
-  function generateMusicSessionId() {
-    return nanoid(21);
-  }
-
-  function generateEncryptionKey() {
-    return crypto.generateKeySync("aes", { length: 128 }).export().toString("base64");
-  }
-
-  function getPublicMusicSession(musicSession) {
-    const { encryptionKey, refreshToken, ...result } = musicSession;
-    return result;
-  }
+    function getPublicMusicSession(musicSession) {
+        // eslint-disable-next-line no-unused-vars
+        const { encryptionKey, refreshToken, ...result } = musicSession;
+        return result;
+    }
 };
 
 module.exports = { createNewMusicSession };
