@@ -9,7 +9,8 @@
         >
             <div class="col">
                 <h4 v-show="!isFocused">
-                    Füge Songs zur Playlist hinzu
+                    Füge Songs zur Playlist <br>
+                    <span style="color: var(--bs-primary)">{{ musicSession.playlistName }}</span> hinzu
                 </h4>
                 <div class="d-flex align-items-center d-inline-block inner-addon right-addon">
                     <i
