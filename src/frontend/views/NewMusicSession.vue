@@ -78,7 +78,6 @@ export default {
   data() {
     return {
       playlistCreate: false,
-      waitTime: 0,
       newPlaylistName: "",
       playlists: [],
       playlistParams: {
@@ -113,6 +112,9 @@ export default {
       this.playlistCreate = false;
     },
     async createMusicSession() {
+      if (this.musicSession.waitTime == "") {
+        this.musicSession.waitTime = 0;
+      }
       const newMusicSession = await createNewMusicSession(
         { ...this.musicSession, ...this.playlistParams },
         this.spotifyUser.id
