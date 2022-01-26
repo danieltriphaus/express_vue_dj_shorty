@@ -44,6 +44,7 @@
                     <button
                         type="button"
                         class="btn btn-outline-danger"
+                        data-cy="deactivateSession"
                         @click="deactivateSession"
                     >
                         <i class="bi bi-trash" />

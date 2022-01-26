@@ -9,6 +9,8 @@ src/api/views
 decent-line*.json
 coverage
 *.pem
+examples
+cypress.env.json
 
 # local env files
 .env.local

@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const deactivateMusicSession = async (spotifyUserId, musicSessionId) => { 
+const deactivateMusicSession = async (spotifyUserId, musicSessionId) => {
     const response = await axios.patch(
-        process.env.VUE_APP_APIURL + "/user/" + spotifyUserId + "/music_session/" + musicSessionId, 
+        "/api/user/" + spotifyUserId + "/music_session/" + musicSessionId,
         { status: "inactive" },
         { withCredentials: true }
     );
@@ -10,4 +10,4 @@ const deactivateMusicSession = async (spotifyUserId, musicSessionId) => {
     return response.data.musicSession;
 };
 
-export { deactivateMusicSession }
+export { deactivateMusicSession };

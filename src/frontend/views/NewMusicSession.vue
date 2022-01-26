@@ -18,6 +18,7 @@
                 <label for="playlist">Playlist auswählen oder erstellen</label>
                 <button
                     v-if="!playlistCreate"
+                    id="new-playlist"
                     type="button"
                     class="btn btn-outline-primary"
                     @click="playlistCreate = true"

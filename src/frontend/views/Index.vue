@@ -5,6 +5,7 @@
             class="row justify-content-center mt-4"
         >
             <router-link
+                id="spotify-login"
                 to="/authorize"
                 class="btn btn-outline-primary"
             >

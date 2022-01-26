@@ -11,6 +11,7 @@
         </div>
         <div class="row">
             <router-link
+                id="new-music-session"
                 to="/new_music_session"
                 type="button"
                 class="btn btn-outline-primary"
