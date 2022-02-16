@@ -1,29 +1,30 @@
 <template>
-  <div 
-    class="drawer"
-    :style="calculatedMaxHeight"
-  > 
     <div 
-      v-if="isLoading"
-      class="col text-center"
-    >
-      <div
-        class="spinner-border text-primary" 
-        role="status" 
-      />
+        class="drawer"
+        :style="calculatedMaxHeight"
+        data-testid="album-drawer"
+    > 
+        <div 
+            v-if="isLoading"
+            class="col text-center"
+        >
+            <div
+                class="spinner-border text-primary" 
+                role="status" 
+            />
+        </div>
+        <div 
+            v-for="track in albumTracks"
+            :key="track.id"
+            ref="albumTrack"
+            class="result"
+        >
+            <search-result-small
+                :track="track"
+                @track-added="$emit('track-added')"
+            />
+        </div>
     </div>
-    <div 
-      v-for="track in albumTracks"
-      :key="track.id"
-      ref="albumTrack"
-      class="result"
-    >
-      <search-result-small
-        :track="track"
-        @track-added="$emit('track-added')"
-      />
-    </div>
-  </div>
 </template>
 
 <script>
@@ -33,15 +34,11 @@ export default {
     props: {
         opened: {
             type: Boolean,
-            default() {
-                return false;
-            }
+            default: false
         },
         isLoading: {
             type: Boolean,
-            default() {
-                return false;
-            }
+            default: false
         },
         albumTracks: {
             type: Array,
@@ -52,7 +49,7 @@ export default {
     },
     computed: {
         calculatedMaxHeight() {
-            const maxHeight = this.isLoading ? 50 : this.albumTracks.length * 81 + 160;
+            const maxHeight = this.isLoading ? 50 : ( this.albumTracks.length + 1 ) * 160;
             return "max-height: " + maxHeight + "px";
         },
     }

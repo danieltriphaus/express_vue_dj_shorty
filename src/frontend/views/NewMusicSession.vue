@@ -39,6 +39,7 @@
                     <button
                         type="button"
                         class="btn btn-outline-primary"
+                        data-testid="create-playlist"
                         @click="createPlaylist"
                     >
                         <i class="bi bi-check" />
@@ -101,28 +102,19 @@ export default {
     });
   },
   methods: {
-    createPlaylist() {
-      createPlaylist(
-        this.accessToken,
-        this.spotifyUser.id,
-        this.newPlaylistName
-      ).then(async () => {
-        this.playlists = await getPlaylists(this.accessToken);
-      });
-
+    async createPlaylist() {
       this.playlistCreate = false;
+      
+      await createPlaylist( this.accessToken, this.spotifyUser.id, this.newPlaylistName);
+      this.playlists = await getPlaylists(this.accessToken);
     },
     async createMusicSession() {
       if (this.musicSession.waitTime == "") {
         this.musicSession.waitTime = 0;
       }
-      const newMusicSession = await createNewMusicSession(
-        { ...this.musicSession, ...this.playlistParams },
-        this.spotifyUser.id
-      );
-      if (newMusicSession.id.length > 0) {
-        this.$router.push("/host");
-      }
+
+      await createNewMusicSession({ ...this.musicSession, ...this.playlistParams },this.spotifyUser.id);
+      this.$router.push("/host");
     },
   },
 };

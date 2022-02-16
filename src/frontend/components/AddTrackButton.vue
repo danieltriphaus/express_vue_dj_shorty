@@ -6,11 +6,13 @@
         <i
             v-if="wasSuccessful"
             class="bi bi-check-lg"
+            data-testid="success-icon"
         />
         <spinner :is-loading="isLoading" />
         <i
             v-if="!isLoading && !wasSuccessful"
-            class="bi bi-plus-circle" 
+            class="bi bi-plus-circle"
+            data-testid="add-button"
         />
     </div>
 </template>
@@ -42,13 +44,13 @@ export default {
 
             try {
                 this.wasSuccessful = await addTrack(this.$route.params, this.spotifyTrackUri);
-
+                
                 this.$toasted.show("Song zur Playlist hinzugefügt", {
                     position: "top-center",
                     duration: 3000,
                     type: "success"
                 });
-
+                
                 this.$emit("track-added");
             } catch(error) {
                 if (error instanceof AddTrackDelayError) {
@@ -59,7 +61,7 @@ export default {
                       type: "error"
                     });
                 } else {
-                  throw error
+                    throw error
                 }
             }
             

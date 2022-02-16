@@ -7,7 +7,7 @@
             autocomplete="off"
             class="btn-check"
             :value="value"
-            @change="$emit('change', { spotifyPlaylistId: $event.target.value, playlistName: playlist.name })"
+            @change="$emit('change', { spotifyPlaylistId: $event.target.value, playlistName: playlist.name });"
         >
         <label
             class="btn btn-outline-secondary"
@@ -31,12 +31,14 @@ export default {
     playlist: {
       type: Object,
       default() {
-        return {};
+          return {};
       }
     },
     modelValue: { 
-      type: String,
-      default: "" 
+      type: Object,
+      default() {
+          return {} ;
+      }
     },
     value: { 
       type: String,

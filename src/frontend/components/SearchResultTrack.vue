@@ -1,17 +1,17 @@
 <template>
-  <div class="search-result">
-    <div class="result-image">
-      <img :src="track.album.images[1].url">
+    <div class="search-result">
+        <div class="result-image">
+            <img :src="track.album.images[1].url">
+        </div>
+        <div class="meta-data">
+            <h6>{{ track.name }}</h6>
+            {{ artists }}
+        </div>
+        <add-track-button
+            :spotify-track-uri="track.uri"
+            @track-added="$emit('track-added')"
+        />
     </div>
-    <div class="meta-data">
-      <h6>{{ track.name }}</h6>
-      {{ artists }}
-    </div>
-    <add-track-button
-      :spotify-track-uri="track.uri"
-      @track-added="$emit('track-added')"
-    />
-  </div>
 </template>
 
 <script>

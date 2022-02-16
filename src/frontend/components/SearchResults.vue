@@ -1,40 +1,40 @@
 <template>
-  <div class="search-results g-0">
-    <div 
-      v-for="track in searchResultTracks" 
-      :key="track.id"
-      class="result"
-    >
-      <search-result-track
-        :track="track"
-        @track-added="$emit('track-added')"
-      />
+    <div class="search-results g-0">
+        <div 
+            v-for="track in searchResultTracks" 
+            :key="track.id"
+            class="result"
+        >
+            <search-result-track
+                :track="track"
+                @track-added="$emit('track-added')"
+            />
+        </div>
+        <div
+            v-show="showMoreItemsButton"
+            class="result load-more-songs"
+            @click="loadMoreSongs"
+        >
+            <spinner :is-loading="isLoadingMoreSongs" />
+            <span v-if="!isLoadingMoreSongs"> Mehr Songs </span>
+        </div>
+        <template
+            v-for="album in searchResultAlbums"
+        >
+            <search-result-album
+                :key="album.id"
+                :album="album" 
+            />
+        </template>
+        <div
+            v-show="showMoreItemsButton"
+            class="result load-more-songs"
+            @click="loadMoreAlbums"
+        >
+            <spinner :is-loading="isLoadingMoreAlbums" />
+            <span v-if="!isLoadingMoreAlbums"> Mehr Alben </span>
+        </div>
     </div>
-    <div
-      v-show="showMoreItemsButton"
-      class="result load-more-songs"
-      @click="loadMoreSongs"
-    >
-      <spinner :is-loading="isLoadingMoreSongs" />
-      <span v-if="!isLoadingMoreSongs"> Mehr Songs </span>
-    </div>
-    <template
-      v-for="album in searchResultAlbums"
-    >
-      <search-result-album
-        :key="album.id"
-        :album="album" 
-      />
-    </template>
-    <div
-      v-show="showMoreItemsButton"
-      class="result load-more-songs"
-      @click="loadMoreAlbums"
-    >
-      <spinner :is-loading="isLoadingMoreAlbums" />
-      <span v-if="!isLoadingMoreAlbums"> Mehr Alben </span>
-    </div>
-  </div>
 </template>
 
 <script>

@@ -1,13 +1,13 @@
 import axios from "axios";
 import { cookieHandler } from "../../helpers/cookieHandler";
 
-const getAccessTokenController = async (apiUrl, cookies) => {
+const getAccessTokenController = async (cookies) => {
     const ch = cookieHandler(cookies);
 
     if (ch.isAccessTokenCookieSet()) {
         return ch.getAccessToken();
     } else {
-        const accessToken = await refreshAccessToken(apiUrl);
+        const accessToken = await refreshAccessToken();
         ch.setAccessTokenCookie(accessToken);
         return accessToken.value;
     }

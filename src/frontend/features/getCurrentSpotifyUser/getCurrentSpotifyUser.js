@@ -1,28 +1,38 @@
 import axios from "axios";
 import spotifyConfig from "config/spotify.config";
 
+const defaultViewData = { display_name: "" };
+
 const getCurrentSpotifyUser = async (accessToken) => {
-  let viewData = { display_name: "" };
+    if (accessToken) {
+        return await getCurrentUserFromSpotify(accessToken);
+    } else {
+        return defaultViewData;
+    }
 
-  if (accessToken) {
-    var http = axios.create({
-      baseURL: spotifyConfig.baseUrl,
-      headers: { Authorization: "Bearer " + accessToken }
-    });
+    async function getCurrentUserFromSpotify(accessToken) {
+        const response = await axios
+            .get(spotifyConfig.baseUrl + "me", { headers: { Authorization: "Bearer " + accessToken } })
+            .catch(async (error) => {
+                if (isAccessTokenRevoked(error)) {
+                    await deleteAuthCookiesViaApi();
+                } else {
+                    throw error;
+                }
+            });
 
-    const response = await http.get("/me")
-      .catch(async (error) => {
-        if (error.response && error.response.status === 401) {
-          await axios.delete(process.env.VUE_APP_APIURL + "/authorize", { withCredentials: true });
-        } else {
-          throw error;
+        if (response) {
+            return response.data;
         }
-      });
+    }
 
-    viewData = response.data;
-  }
+    async function deleteAuthCookiesViaApi() {
+        await axios.delete(process.env.VUE_APP_APIURL + "/authorize", { withCredentials: true });
+    }
 
-  return viewData;
+    function isAccessTokenRevoked(error) {
+        return error.response && error.response.status === 401;
+    }
 };
 
 export { getCurrentSpotifyUser };

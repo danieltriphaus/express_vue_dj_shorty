@@ -1,36 +1,39 @@
 <template>
-  <div class="album-result">
-    <div class="result">
-      <div class="search-result">
-        <div class="result-image">
-          <img :src="album.images[1].url">
+    <div class="album-result">
+        <div class="result">
+            <div class="search-result">
+                <div class="result-image">
+                    <img :src="album.images[1].url">
+                </div>
+                <div class="meta-data">
+                    <h6>{{ album.name }}</h6>
+                    {{ artists }}
+                </div>
+                <div
+                    class="add-button"
+                >
+                    <i 
+                        class="bi"
+                        :class="albumButtonIcon"
+                        data-testid="open-album"
+                        @click="openAlbum"
+                    />
+                </div>
+            </div>
         </div>
-        <div class="meta-data">
-          <h6>{{ album.name }}</h6>
-          {{ artists }}
-        </div>
-        <div class="add-button">
-          <i 
-            class="bi"
-            :class="albumButtonIcon"
-            @click="openAlbum"
-          />
-        </div>
-      </div>
+        <transition
+            name="open"
+            mode="out-in"
+        >
+            <component
+                :is="albumDrawer"
+                :opened="opened"
+                :is-loading="isLoading"
+                :album-tracks="albumTracks"
+                @track-addded="$emit('track-added')"
+            />
+        </transition>
     </div>
-    <transition
-      name="open"
-      mode="out-in"
-    >
-      <component
-        :is="albumDrawer"
-        :opened="opened"
-        :is-loading="isLoading"
-        :album-tracks="albumTracks"
-        @track-addded="$emit('track-added')"
-      />
-    </transition>
-  </div>
 </template>
 
 <script>
@@ -61,26 +64,23 @@ export default {
         albumButtonIcon() {
           return this.opened ? "bi-chevron-down" : "bi-chevron-left"
         },
-        drawerOpenedClass() {
-          return this.opened ? "height: 200px" : "";
-        },
         albumDrawer() {
           return this.opened ? "album-song-list" : "";
         }
     },
     methods: {
         async openAlbum() {
-          this.opened = !this.opened;
-          this.isLoading = true;
+            this.opened = !this.opened;
+            this.isLoading = true;
 
-          const response = await axios.get(
-            "/api/user/" + this.$route.params.userId 
-            + "/music_session/" + this.$route.params.musicSessionId 
-            + "/guest/album/" + this.album.id + "/track");
+            const response = await axios.get(
+                "/api/user/" + this.$route.params.userId 
+                + "/music_session/" + this.$route.params.musicSessionId 
+                + "/guest/album/" + this.album.id + "/track");
 
-          this.albumTracks = response.data.items;
+            this.albumTracks = response.data.items;
 
-          this.isLoading = false;
+            this.isLoading = false;
         }
     }
 }

@@ -1,15 +1,16 @@
 <template>
-  <div 
-    v-if="isLoading"
-    class="row spinner"
-  >
-    <div class="col text-center">
-      <div
-        class="spinner-border text-primary" 
-        role="status" 
-      />
+    <div 
+        v-if="isLoading"
+        class="row spinner"
+        data-testid="spinner"
+    >
+        <div class="col text-center">
+            <div
+                class="spinner-border text-primary" 
+                role="status" 
+            />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>

@@ -117,8 +117,10 @@
                         this.musicSession = undefined;
                     }
                 });
-
-            this.musicSession = response.data ? response.data : {};
+            
+            if (response) {
+                this.musicSession = response.data ? response.data : {};
+            }
         },
         methods: {
             blurSearchInput() {

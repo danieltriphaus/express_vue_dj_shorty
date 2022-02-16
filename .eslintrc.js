@@ -4,6 +4,7 @@ module.exports = {
         node: true,
     },
     extends: ["eslint:recommended", "plugin:vue/essential", "plugin:vue/recommended"],
+    plugins: ["testing-library"],
     parserOptions: {
         parser: "babel-eslint",
     },
@@ -18,6 +19,7 @@ module.exports = {
             env: {
                 jest: true,
             },
+            extends: ["plugin:testing-library/vue"],
         },
     ],
 };

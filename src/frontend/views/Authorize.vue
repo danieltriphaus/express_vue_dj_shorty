@@ -3,13 +3,10 @@
 </template>
 
 <script>
-import axios from "axios";
 import { spotifyAuthorizeController } from "../features/SpotifyAuthorize/spotifyAuthorizeController.js";
 
 export default {
   async created() {
-    this.axios = axios.create();
-
     if (this.$route.query.code) {
       spotifyAuthorizeController(
         process.env.BASE_URL,

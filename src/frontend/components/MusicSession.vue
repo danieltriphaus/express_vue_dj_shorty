@@ -27,6 +27,7 @@
                     >
                     <button
                         class="input-group-text btn btn-outline-light"
+                        data-testid="share-button"
                         @click="shareMusicSessionLink"
                     >
                         <i class="bi bi-share" />
@@ -44,7 +45,7 @@
                     <button
                         type="button"
                         class="btn btn-outline-danger"
-                        data-cy="deactivateSession"
+                        data-testid="deactivate-session"
                         @click="deactivateSession"
                     >
                         <i class="bi bi-trash" />
