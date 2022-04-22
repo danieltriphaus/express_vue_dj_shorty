@@ -11,12 +11,16 @@ const ACCESS_TOKEN_COOKIE_OPTIONS = {
 
 const authenticateGuest = async (req, res) => {
     return await (async () => {
+        req.isHost = () => {
+            return req.cookies.spotify_refresh_token;
+        };
+
         let spotifyAccessToken, guestSpotifyAccessToken;
 
         const dh = datastoreHandler();
         const musicSession = await dh.getMusicSession(req.params.spotifyUserId, req.params.musicSessionId);
 
-        if (isHost()) {
+        if (req.isHost()) {
             spotifyAccessToken = await getHostAccessToken();
         } else {
             guestSpotifyAccessToken = await getGuestAccessToken(musicSession);
@@ -25,10 +29,6 @@ const authenticateGuest = async (req, res) => {
 
         req.djShorty = { spotifyAccessToken, musicSession };
     })();
-
-    function isHost() {
-        return req.cookies.spotify_refresh_token;
-    }
 
     async function getGuestAccessToken(musicSession) {
         if (isAccessTokenCokieInvalid()) {

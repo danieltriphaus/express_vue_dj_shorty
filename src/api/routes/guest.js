@@ -63,7 +63,7 @@ router.get("/search", async function (req, res) {
 
 router.post("/track", async function (req, res) {
     try {
-        if (!isHost(req)) {
+        if (!req.isHost(req)) {
             const trackDelay = enforceAddTrackDelay(
                 req.djShorty.spotifyAccessToken,
                 req.djShorty.musicSession.id,
